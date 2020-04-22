@@ -1,0 +1,11 @@
+{
+  "name": "Savitar-Card",
+  "version": "1.0.0",
+  "description": "Savitar Credit Card widget",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Savitar <CorentinGC>",
+  "license": "ISC"
+}
