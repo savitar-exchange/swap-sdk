@@ -224,7 +224,7 @@ let styles = `
     .savitar-widget-container {
         min-width: 540px;
         width: 100%;
-        height: 700px;
+        min-height: 480px;
         border-color: transparent;
         border-width: 0;
         border-style: none;
