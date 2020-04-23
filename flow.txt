@@ -1,6 +1,0 @@
-1 - Widget modal ou embed intégré chez client. Affiche page de savitar avec client_id en paramètre.
-2 - Une fois le module chargé, demande email de l'utilisateur, et lui envoie un lien pour login (??) ==> Faire comme synaps (code/mot de passe envoyé par email, a rentrer sur le module)
-3 - Le client est loggé, on lui demande alors le montant fiat/crypto a acheter par carte
-4 - On demande l'adresse de dépôt des fonds
-5 - On affiche le formulaire de paiement CC (avec étape 3ds)
-6 - Afficher le status de la transaction + envoie confirmation email

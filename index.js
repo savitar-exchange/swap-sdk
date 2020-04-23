@@ -1,9 +1,19 @@
   
+
+const defaultOpts = {
+    type: 'modal',
+    mode: 'production',
+    embedContainerId: 'savitar-embed',
+    iframeContainerClass: 'savitar-widget-container',
+    buttonId: 'savitar-init'
+}
 class SavitarWidget {
-	constructor(client_id, options = {
-		type: 'modal',
-		mode: 'production',
-	}) {
+	constructor(client_id, options = defaultOpts) {
+        options = {
+            ...defaultOpts,
+            ...options
+        }
+
 		this.base_url = 'https://widget.savitar.io/';
         this.client_id = client_id
         this.email = null
@@ -12,6 +22,9 @@ class SavitarWidget {
 
         this.widgetType = options.type
 		this.iframe = document.createElement('iframe')
+        this.iframeContainerClass = options.iframeContainerClass
+        this.embedContainerId = options.embedContainerId
+        this.buttonId = options.buttonId
 
 		this.injectStyle()
 
@@ -29,16 +42,17 @@ class SavitarWidget {
     }
 
     init(options = {
-		email: '',
-		id: 'savitar-embed',
+		email: ''
 	}) {
 		this.setupEvents()
         this.email = options.email
         
         if (this.widgetType === 'embed' 
-            && options.id !== '') this.initEmbed(options.id)
+            && this.embedContainerId !== '') this.initEmbed(this.embedContainerId)
 
-		if (this.widgetType === 'modal') this.initModal()
+        if (this.widgetType === 'modal') this.initModal()
+        
+        return this
     }
 	on(type, callback) {
         switch(type){
@@ -53,6 +67,8 @@ class SavitarWidget {
                 throw new SavitarWidgetError('"'+type+'" event do not exists');
 
         }
+
+        return this
 	}
 // private methods
     injectStyle() {
@@ -73,7 +89,7 @@ class SavitarWidget {
         if ( (element.tagName === 'BUTTON' || element.tagName === 'A')
         && element.attributes.id ) {
 
-            if (element.attributes.id.value === 'savitar-init' 
+            if (element.attributes.id.value === this.buttonId 
             && !self.widgetStarted) {
                 self.openModal()
             }
@@ -102,7 +118,7 @@ class SavitarWidget {
         src = `${src}&${this.widgetType}`
         
 		this.iframe.setAttribute('src', src)
-		this.iframe.setAttribute('id', 'savitar-embed-iframe')
+		this.iframe.setAttribute('id', this.iframeContainerClass)
 		this.iframe.setAttribute('allowtransparency', 'true')
 		this.iframe.setAttribute('frameborder', 'none')
 		this.iframe.setAttribute('border', '0')
@@ -110,14 +126,14 @@ class SavitarWidget {
         
 		return this.iframe
 	}  
-	initEmbed(id='savitar-embed') {
+	initEmbed(id) {
 		this.iframe = this.initIframe()
         let embedContainer = document.getElementById(id)
         
         if (embedContainer === null) throw new SavitarWidgetError('#'+id+' container not found')
 
         this.widgetStarted = true
-        this.iframe.setAttribute('class', 'savitar-widget-container')
+        this.iframe.setAttribute('class', this.iframeContainerClass)
         embedContainer.appendChild(this.iframe)
 	}
 
@@ -206,7 +222,8 @@ let styles = `
     }
 
     .savitar-widget-container {
-        width: 700px;
+        min-width: 540px;
+        width: 100%;
         height: 700px;
         border-color: transparent;
         border-width: 0;
@@ -216,21 +233,14 @@ let styles = `
         -webkit-tap-highlight-color: transparent
     }
 
-    @media(max-width:700px) {
-        .savitar-widget-container {
-            width: 98%
-        }
-    }
 `
 
 class SavitarWidgetError extends Error {
     constructor(...params) {
-      // Passer les arguments restants (incluant ceux spécifiques au vendeur) au constructeur parent
       super(...params)
   
-      // Maintenir dans la pile une trace adéquate de l'endroit où l'erreur a été déclenchée (disponible seulement en V8)
       if(Error.captureStackTrace) Error.captureStackTrace(this, SavitarWidgetError)
 
       this.name = 'SavitarWidgetError'
     }
-  }
+}
