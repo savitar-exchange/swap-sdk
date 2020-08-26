@@ -1,6 +1,6 @@
   
 
-const defaultOpts = {
+const DEFAULT_OPTS = {
     type: 'modal',
     mode: 'production',
     embedContainerId: 'savitar-embed',
@@ -8,9 +8,9 @@ const defaultOpts = {
     buttonId: 'savitar-init'
 }
 class SavitarWidget {
-	constructor(client_id, options = defaultOpts) {
+	constructor(client_id, options = DEFAULT_OPTS) {
         options = {
-            ...defaultOpts,
+            ...DEFAULT_OPTS,
             ...options
         }
 
@@ -29,7 +29,7 @@ class SavitarWidget {
 		this.injectStyle()
 
 		if (options.mode === 'sandbox') {
-            this.base_url = 'http://127.0.0.1:5000';
+            this.base_url = 'http://localhost:3000/widget';
 		}
 
 		if (options.type === 'modal' || options.type === 'embed') {
@@ -74,7 +74,7 @@ class SavitarWidget {
     injectStyle() {
 		let styleSheet = document.createElement('style')
 		styleSheet.type = 'text/css'
-		styleSheet.innerText = styles
+		styleSheet.innerText = globalStyles
 		document.head.appendChild(styleSheet)
     }
 	initModal() {
@@ -90,19 +90,13 @@ class SavitarWidget {
         && element.attributes.id ) {
 
             if (element.attributes.id.value === this.buttonId 
-            && !self.widgetStarted) {
-                self.openModal()
+                && !self.widgetStarted) {
+                    self.openModal()
             }
         }
     }
     openModal() {
 		if (this.widgetStarted) return
-        
-		let src = `${this.base_url}?client_id=${this.client_id}`
-		if (this.email !== null) {
-			src = `${src}&email=${this.email}`
-		}
-        src = `${src}&type=${this.widgetType}`
         
 		this.iframe = this.initIframe()
 		this.iframe.setAttribute('style', iframeStyle)
@@ -111,11 +105,9 @@ class SavitarWidget {
 		document.body.appendChild(this.iframe)
     }
     initIframe() {
-		let src = `${this.base_url}?client_id=${this.client_id}`
-		if (this.email !== null) {
-			src = `${src}&email=${this.email}`
-		}
-        src = `${src}&${this.widgetType}`
+        let src = `${this.base_url}?type=${this.widgetType}`
+        
+		if (this.email) src = `${src}&email=${this.email}`
         
 		this.iframe.setAttribute('src', src)
 		this.iframe.setAttribute('id', this.iframeContainerClass)
@@ -142,7 +134,7 @@ class SavitarWidget {
 
         switch(e.data.action){
             case 'ready':
-                if (typeof self.onReady === 'function')  self.onReady()
+                if (typeof self.onReady === 'function') self.onReady()
             break
             case 'close':
                 if (self.widgetType === 'modal') {
@@ -154,7 +146,7 @@ class SavitarWidget {
                 if (typeof self.onExit === 'function') self.onExit()
             break
             default:
-                throw new SavitarWidgetError(' "'+e.data.action+'" action not handled. Contact support.')
+                throw new SavitarWidgetError(' "'+e.data.action+'" action not handled.')
         }
     }
     setupEvents() {
@@ -190,7 +182,7 @@ let iframeStyle = `
     -webkit-tap-highlight-color: transparent;
 `
 
-let styles = `
+let globalStyles = `
     @import url(https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;1,400&display=swap");
 
     .savitar-open {
