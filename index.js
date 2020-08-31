@@ -5,7 +5,8 @@ const DEFAULT_OPTS = {
     mode: 'production',
     embedContainerId: 'savitar-embed',
     iframeContainerClass: 'savitar-widget-container',
-    buttonId: 'savitar-init'
+    buttonId: 'savitar-init',
+    config: {}
 }
 class SavitarWidget {
 	constructor(client_id, options = DEFAULT_OPTS) {
@@ -16,7 +17,8 @@ class SavitarWidget {
 
 		this.base_url = 'https://widget.savitar.io/';
         this.client_id = client_id
-        this.email = null
+
+        this.config = options.config
 
         this.widgetStarted = false
 
@@ -41,11 +43,8 @@ class SavitarWidget {
 		// this.userOnboardDeclinedCallback = null
     }
 
-    init(options = {
-		email: ''
-	}) {
+    init() {
 		this.setupEvents()
-        this.email = options.email
         
         if (this.widgetType === 'embed' 
             && this.embedContainerId !== '') this.initEmbed(this.embedContainerId)
@@ -107,7 +106,13 @@ class SavitarWidget {
     initIframe() {
         let src = `${this.base_url}?type=${this.widgetType}`
         
-		if (this.email) src = `${src}&email=${this.email}`
+		if (this.config?.email) src = `${src}&email=${this.config.email}`
+		if (this.config?.email_editable) src = `${src}&email_editable=${this.config.email_editable}`
+		if (this.config?.type) src = `${src}&payment_type=${this.config.type}`
+		if (this.config?.currency) src = `${src}&currency=${this.config.currency}`
+		if (this.config?.amount) src = `${src}&amount=${this.config.amount}`
+		if (this.config?.amount_editable) src = `${src}&amount_editable=${this.config.amount_editable}`
+		if (this.config?.delivery_address) src = `${src}&delivery_address=${this.config.delivery_address}`
         
 		this.iframe.setAttribute('src', src)
 		this.iframe.setAttribute('id', this.iframeContainerClass)

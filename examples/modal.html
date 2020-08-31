@@ -30,13 +30,21 @@
         const Savitar = new SavitarWidget(1234567, {
             mode: 'sandbox', 
             type: 'modal',
-            buttonId: 'savitar-init'
+            buttonId: 'savitar-init',
+            config: {
+                type: 'merchant',
+                email: 'user@test.com',
+                email_editable: true,
+                currency: 'btc',
+                amount: 50,
+                amount_editable: false,
+                delivery_address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX'
+            }
         })
 
+
         Savitar
-        .init({
-            email: 'user@test.com'
-        })
+        .init()
         .on('ready', () => {
             console.log('widget is ready')
         })
