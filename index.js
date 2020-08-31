@@ -150,6 +150,13 @@ class SavitarWidget {
                 }
                 if (typeof self.onExit === 'function') self.onExit()
             break
+
+            case 'exited':
+                console.log('kyc exited')
+                // window.frames.postMessage({action: 'exited'}, '*')
+                // window.parent.postMessage({action: 'exited'}, '*')
+            break
+
             default:
                 throw new SavitarWidgetError(' "'+e.data.action+'" action not handled.')
         }
