@@ -25,16 +25,12 @@
 
     <script src='../index.js'></script>
     <script>
-        const SavitarEmbed = new SavitarWidget(1234567, {
+        const SavitarEmbed = new SavitarWidget({
             mode: 'sandbox', 
             type: 'embed',
             embedContainerId: 'savitar-embed'
         })
-
-        SavitarEmbed
-        .init({
-            email: 'user@test.com'
-        })
+        .init()
         .on('ready', () => {
             console.log('widget is ready')
         })

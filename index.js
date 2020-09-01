@@ -6,20 +6,20 @@ const DEFAULT_OPTS = {
     embedContainerId: 'savitar-embed',
     iframeContainerClass: 'savitar-widget-container',
     buttonId: 'savitar-init',
+    payButtons: false,
     config: {}
 }
 class SavitarWidget {
-	constructor(client_id, options = DEFAULT_OPTS) {
+	constructor(options = DEFAULT_OPTS) {
         options = {
             ...DEFAULT_OPTS,
             ...options
         }
 
 		this.base_url = 'https://widget.savitar.io/';
-        this.client_id = client_id
 
-        this.config = options.config
-
+        this.config = {...options.config}
+        this.default_config = {...options.config}
         this.widgetStarted = false
 
         this.widgetType = options.type
@@ -27,6 +27,7 @@ class SavitarWidget {
         this.iframeContainerClass = options.iframeContainerClass
         this.embedContainerId = options.embedContainerId
         this.buttonId = options.buttonId
+        this.payButtons = options.payButtons
 
 		this.injectStyle()
 
@@ -51,6 +52,8 @@ class SavitarWidget {
 
         if (this.widgetType === 'modal') this.initModal()
         
+        if(this.payButtons) this.initButtons()
+
         return this
     }
 	on(type, callback) {
@@ -76,6 +79,7 @@ class SavitarWidget {
 		styleSheet.innerText = globalStyles
 		document.head.appendChild(styleSheet)
     }
+//Modal
 	initModal() {
 		document.addEventListener('click', e => this.modalEvents(this, e))
     }
@@ -85,7 +89,7 @@ class SavitarWidget {
     modalEvents(self, event) {
         let element = event.target
 
-        if ( (element.tagName === 'BUTTON' || element.tagName === 'A')
+        if ( (element.tagName === 'BUTTON' || element.tagName === 'SPAN')
         && element.attributes.id ) {
 
             if (element.attributes.id.value === this.buttonId 
@@ -107,12 +111,14 @@ class SavitarWidget {
         let src = `${this.base_url}?type=${this.widgetType}`
         
 		if (this.config?.email) src = `${src}&email=${this.config.email}`
-		if (this.config?.email_editable) src = `${src}&email_editable=${this.config.email_editable}`
+		if (this.config?.email_editable === true) src = `${src}&email_editable=${this.config.email_editable}`
 		if (this.config?.type) src = `${src}&payment_type=${this.config.type}`
 		if (this.config?.currency) src = `${src}&currency=${this.config.currency}`
 		if (this.config?.amount) src = `${src}&amount=${this.config.amount}`
-		if (this.config?.amount_editable) src = `${src}&amount_editable=${this.config.amount_editable}`
+		if (this.config?.amount_editable === true) src = `${src}&amount_editable=${this.config.amount_editable}`
 		if (this.config?.delivery_address) src = `${src}&delivery_address=${this.config.delivery_address}`
+		if (this.config?.payment_type) src = `${src}&payment_type=${this.config.payment_type}`
+		if (this.config?.order_type) src = `${src}&order_type=${this.config.order_type}`
         
 		this.iframe.setAttribute('src', src)
 		this.iframe.setAttribute('id', this.iframeContainerClass)
@@ -133,7 +139,59 @@ class SavitarWidget {
         this.iframe.setAttribute('class', this.iframeContainerClass)
         embedContainer.appendChild(this.iframe)
 	}
+// Buttons
+    initButtons(){
+        document.addEventListener('click', e => this.buttonsEvents(this, e))
 
+        const buttons = document.querySelectorAll('button[type="svt-btn"')
+
+        buttons.forEach(e => {
+            if(e.innerText.length === 0) {
+                const amount = e.getAttribute('svt-amount')
+                const currency = e.getAttribute('svt-currency')
+                // const payment_type = e.getAttribute('svt-payment-type')
+
+                let text = 'Buy '
+
+                if(amount) text += amount+'€ '
+                if(currency) text += 'in '+currency
+
+                e.textContent = text ? text : 'Pay now with Savitar'
+            }
+        })
+    }
+    closeButtonsEvents(){
+        document.removeEventListener('click', e => this.buttonsEvents(this, e))
+    }
+    buttonsEvents(self, event) {
+        let element = event.target
+        
+        if ( (element.tagName === 'BUTTON' || element.tagName === 'SAVITAR') ) {
+            if( !element.attributes?.type?.value === 'svt-btn' ) return
+
+            const email = element.getAttribute('svt-email')
+            const email_editable = element.getAttribute('svt-email-editable') === 'true'
+            const amount = element.getAttribute('svt-amount')
+            const amount_editable = element.getAttribute('svt-amount-editable') === 'true'
+            const currency = element.getAttribute('svt-currency')
+            const delivery_address = element.getAttribute('svt-delivery-address')
+            const payment_type = element.getAttribute('svt-payment-type')
+            const order_type = element.getAttribute('svt-order-type')
+
+            if (!self.widgetStarted) {
+                if(amount) this.config.amount = amount
+                if(amount_editable) this.config.amount_editable = amount_editable                
+                if(email) this.config.email = email
+                if(email_editable) this.config.email_editable = email_editable
+                if(currency) this.config.currency = currency
+                if(delivery_address) this.config.delivery_address = delivery_address
+                if(payment_type) this.config.payment_type = payment_type
+                if(order_type) this.config.order_type = order_type
+
+                self.openModal()
+            }
+        }
+    }
     callbacksListeners(self, e){
         if(e.data.action === undefined) return
 
@@ -152,7 +210,7 @@ class SavitarWidget {
             break
 
             case 'exited':
-                console.log('kyc exited')
+                // console.log('kyc exited')
                 // window.frames.postMessage({action: 'exited'}, '*')
                 // window.parent.postMessage({action: 'exited'}, '*')
             break
@@ -170,11 +228,12 @@ class SavitarWidget {
 
 
 	resetFrame() {
+        this.config = {...this.default_config}
 		this.iframe.setAttribute('src', '#')
         this.iframe.setAttribute('style', 'display:none')
         
 		this.widgetStarted = false
-		document.body.appendChild(this.iframe)
+        document.body.appendChild(this.iframe)
 	}
 }
 
@@ -194,13 +253,15 @@ let iframeStyle = `
     -webkit-tap-highlight-color: transparent;
 `
 
+const blue_1 = '#0d4d9a'
+
 let globalStyles = `
     @import url(https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;1,400&display=swap");
 
     .savitar-open {
         font-family: Roboto, sans-serif;
 
-        background-color: #0d4d9a;
+        background-color: ${blue_1};
         border-radius: 20px;
         display: inline-block;
         font-weight: 400;
@@ -235,6 +296,36 @@ let globalStyles = `
         left: 0;
         top: 0;
         -webkit-tap-highlight-color: transparent
+    }
+    button[type='svt-btn']{
+        font-family: Roboto, sans-serif;
+
+        background-color: ${blue_1};
+        border-radius: 20px;
+        display: inline-block;
+        font-weight: 400;
+        color: #ffffff;
+
+        margin: 5px;
+
+        text-align: center;
+        vertical-align: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: .25rem;
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    button[type='svt-btn']:hover {
+        -webkit-transition: background-color .25s ease-in-out;
+        transition: background-color .25s ease-in-out;
+        background-color: #0f59b2;
     }
 
 `

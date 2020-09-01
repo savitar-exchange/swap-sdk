@@ -13,13 +13,15 @@
     <div class="container my-4">
         <div class="row">
             <div class="col-12 text-center my-2">
-                <h3>Widget modal example</h3>
+                <h3>Pay buttons example</h3>
             </div>
             <div class="col-12 offset-md-3 col-md-6 text-center card my-2 py-2">
-                <h5>Modal (click on button to start)</h5>
-                <button class="savitar-open" id="savitar-init">
-                    Pay with Savitar
-                </button>
+                <h5>Pay Buttons (click on button to start)</h5>
+                <button type='svt-btn' svt-amount='50' svt-currency='usdt' svt-email='user@email.com' order-type='buy'>Pay now !</button>
+                <button type='svt-btn' svt-payment-type='merchant' svt-amount='150' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
+                <button type='svt-btn' svt-payment-type='exchange' svt-amount='50' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
+                <button type='svt-btn' svt-currency='xtz' />
+
             </div>
         </div>
 
@@ -29,25 +31,8 @@
     <script>
         const Savitar = new SavitarWidget({
             mode: 'sandbox', 
-            type: 'modal',
-            buttonId: 'savitar-init',
-            config: {
-                type: 'merchant',
-                email: 'user@test.com',
-                email_editable: true,
-                currency: 'btc',
-                amount: 200,
-                amount_editable: false,
-                delivery_address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX'
-            }
-        })
-        .init()
-        .on('ready', () => {
-            console.log('widget is ready')
-        })
-        .on('close', () => {
-            console.log('widget is closed')
-        })
+            payButtons: true,
+        }).init()
 
     </script>
 </body>
