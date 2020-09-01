@@ -6,7 +6,8 @@ const DEFAULT_OPTS = {
     embedContainerId: 'savitar-embed',
     iframeContainerClass: 'savitar-widget-container',
     buttonId: 'savitar-init',
-    payButtons: false,
+    payButtons: true,
+    payButtonsStyle: true,
     config: {}
 }
 class SavitarWidget {
@@ -30,6 +31,8 @@ class SavitarWidget {
         this.payButtons = options.payButtons
 
 		this.injectStyle()
+
+        if(options.payButtons && options.payButtonsStyle) this.injectButtonStyle()
 
 		if (options.mode === 'sandbox') {
             this.base_url = 'http://localhost:3000/widget';
@@ -78,6 +81,14 @@ class SavitarWidget {
 		styleSheet.type = 'text/css'
 		styleSheet.innerText = globalStyles
 		document.head.appendChild(styleSheet)
+    }
+    injectButtonStyle() {
+		let styleSheet = document.createElement('style')
+		styleSheet.type = 'text/css'
+		styleSheet.innerText = buttonStyle
+        document.head.appendChild(styleSheet)
+        
+        console.log('button style injected')
     }
 //Modal
 	initModal() {
@@ -149,12 +160,15 @@ class SavitarWidget {
             if(e.innerText.length === 0) {
                 const amount = e.getAttribute('svt-amount')
                 const currency = e.getAttribute('svt-currency')
-                // const payment_type = e.getAttribute('svt-payment-type')
+                const payment_type = e.getAttribute('svt-payment-type')
 
-                let text = 'Buy '
+                let text
+                
+
+                text = payment_type === 'merchant' ? 'Pay ' : 'Buy '
 
                 if(amount) text += amount+'€ '
-                if(currency) text += 'in '+currency
+                if(currency) text += (amount ? 'in ' : '')+currency
 
                 e.textContent = text ? text : 'Pay now with Savitar'
             }
@@ -255,7 +269,7 @@ let iframeStyle = `
 
 const blue_1 = '#0d4d9a'
 
-let globalStyles = `
+const globalStyles = `
     @import url(https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;1,400&display=swap");
 
     .savitar-open {
@@ -297,6 +311,10 @@ let globalStyles = `
         top: 0;
         -webkit-tap-highlight-color: transparent
     }
+
+`
+
+const buttonStyle = `    
     button[type='svt-btn']{
         font-family: Roboto, sans-serif;
 
