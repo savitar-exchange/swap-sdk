@@ -1,7 +1,7 @@
 {
-  "name": "Savitar-Card",
+  "name": "swap-sdk",
   "version": "1.0.0",
-  "description": "Savitar Credit Card widget",
+  "description": "Savitar Swap SDK",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
