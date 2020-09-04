@@ -22,8 +22,7 @@ or
 
 3 - Set configuration
 
-    const Swap = new SwapWidget(YOUR_CLIENT_ID, {
-        mode: 'production', 
+    const Swap = new SwapWidget({
         type: 'modal'
     })
 
