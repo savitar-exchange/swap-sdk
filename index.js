@@ -3,21 +3,21 @@
 const DEFAULT_OPTS = {
     type: 'modal',
     mode: 'production',
-    embedContainerId: 'savitar-embed',
-    iframeContainerClass: 'savitar-widget-container',
-    buttonId: 'savitar-init',
+    embedContainerId: 'swap-embed',
+    iframeContainerClass: 'swap-widget-container',
+    buttonId: 'swap-init',
     payButtons: true,
     payButtonsStyle: true,
     config: {}
 }
-class SavitarWidget {
+class SwapWidget {
 	constructor(options = DEFAULT_OPTS) {
         options = {
             ...DEFAULT_OPTS,
             ...options
         }
 
-		this.base_url = 'https://widget.savitar.io/';
+		this.base_url = 'https://swap.savitar.io/';
 
         this.config = {...options.config}
         this.default_config = {...options.config}
@@ -69,7 +69,7 @@ class SavitarWidget {
             break
 
             default:
-                throw new SavitarWidgetError('"'+type+'" event do not exists');
+                throw new SwapWidgetError('"'+type+'" event do not exists');
 
         }
 
@@ -144,7 +144,7 @@ class SavitarWidget {
 		this.iframe = this.initIframe()
         let embedContainer = document.getElementById(id)
         
-        if (embedContainer === null) throw new SavitarWidgetError('#'+id+' container not found')
+        if (embedContainer === null) throw new SwapWidgetError('#'+id+' container not found')
 
         this.widgetStarted = true
         this.iframe.setAttribute('class', this.iframeContainerClass)
@@ -170,7 +170,7 @@ class SavitarWidget {
                 if(amount) text += amount+'€ '
                 if(currency) text += (amount ? 'in ' : '')+currency
 
-                e.textContent = text ? text : 'Pay now with Savitar'
+                e.textContent = text ? text : 'Pay now with Swap'
             }
         })
     }
@@ -230,7 +230,7 @@ class SavitarWidget {
             break
 
             default:
-                throw new SavitarWidgetError(' "'+e.data.action+'" action not handled.')
+                throw new SwapWidgetError(' "'+e.data.action+'" action not handled.')
         }
     }
     setupEvents() {
@@ -272,7 +272,7 @@ const blue_1 = '#0d4d9a'
 const globalStyles = `
     @import url(https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;1,400&display=swap");
 
-    .savitar-open {
+    .swap-open {
         font-family: Roboto, sans-serif;
 
         background-color: ${blue_1};
@@ -294,13 +294,13 @@ const globalStyles = `
         border-radius: .25rem;
         transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     }
-    .savitar-open:hover {
+    .swap-open:hover {
         -webkit-transition: background-color .25s ease-in-out;
         transition: background-color .25s ease-in-out;
         background-color: #0f59b2;
     }
 
-    .savitar-widget-container {
+    .swap-widget-container {
         min-width: 540px;
         width: 100%;
         min-height: 480px;
@@ -348,12 +348,12 @@ const buttonStyle = `
 
 `
 
-class SavitarWidgetError extends Error {
+class SwapWidgetError extends Error {
     constructor(...params) {
       super(...params)
   
-      if(Error.captureStackTrace) Error.captureStackTrace(this, SavitarWidgetError)
+      if(Error.captureStackTrace) Error.captureStackTrace(this, SwapWidgetError)
 
-      this.name = 'SavitarWidgetError'
+      this.name = 'SwapWidgetError'
     }
 }

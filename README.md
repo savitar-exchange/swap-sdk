@@ -1,46 +1,50 @@
-# Savitar Widget
+# Swap Widget
 
 1 - Install package 
 
-`npm i @savitar/card-widget` 
+`npm i https://github.com/swap-exchange/swap-sdk` 
 
 or 
 
-`yarn add @savitar/card-widget`
+`yarn add https://github.com/swap-exchange/swap-sdk`
 
 2 - Import widget
 
-`import SavitarWidget from '@savitar/card-widget' `
+`import SwapWidget from 'swap-sdk' `
 
 or
 
-`const SavitarWidget = require('@savitar/card-widget')`
+`const SwapWidget = require('swap-sdk')`
+
+or 
+
+`<script type='text/javascript' src='./node_modules/swap-sdk/index.js'>`
 
 3 - Set configuration
 
-    const Savitar = new SavitarWidget(YOUR_CLIENT_ID, {
+    const Swap = new SwapWidget(YOUR_CLIENT_ID, {
         mode: 'production', 
         type: 'modal'
     })
 
 4 - Init widget
 
-    Savitar
+    Swap
     .init({
         email: 'user@test.com'
     })
 
 # Modal
-Add a button or link with id `savitar-init` (or edit `buttonId`)
+Add a button or link with id `swap-init` (or edit `buttonId`)
 
-    <button class="savitar-open" id="savitar-init">
-        Pay with Savitar
+    <button class="swap-open" id="swap-init">
+        Pay with Swap
     </button>
 
 # Embed
-Add a container with id `savitar-embed` (or edit `embedContainerId`)
+Add a container with id `swap-embed` (or edit `embedContainerId`)
 
-    <div id="savitar-embed"></div>
+    <div id="swap-embed"></div>
 
 
 # Advanced
@@ -54,7 +58,7 @@ Add a container with id `savitar-embed` (or edit `embedContainerId`)
 
 ### Listeners
 
-    Savitar
+    Swap
     .on(EVENT, () => {})
 
 #### Events
@@ -64,11 +68,11 @@ Add a container with id `savitar-embed` (or edit `embedContainerId`)
 - `failure`: Payment failure
 
 #### Chaining
-    Savitar
+    Swap
     .init()
     .on(EVENT, () => {})
     .on(EVENT, () => {})
     .on(EVENT, () => {})
 
 ## About
-Website: https://savitar.io
+Website: https://swap.savitar.io

@@ -17,8 +17,8 @@
             </div>
             <div class="col-12 offset-md-3 col-md-6 text-center card my-2 py-2">
                 <h5>Modal (click on button to start)</h5>
-                <button class="savitar-open" id="savitar-init">
-                    Pay with Savitar
+                <button class="swap-open" id="swap-init">
+                    Pay with Swap
                 </button>
             </div>
         </div>
@@ -27,10 +27,10 @@
 
     <script src='../index.js'></script>
     <script>
-        const Savitar = new SavitarWidget({
+        const Swap = new SwapWidget({
             mode: 'sandbox', 
             type: 'modal',
-            buttonId: 'savitar-init',
+            buttonId: 'swap-init',
             config: {
                 type: 'merchant',
                 email: 'user@test.com',

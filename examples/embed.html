@@ -17,7 +17,7 @@
             </div>
             <div class="col-12 col-md-6 mx-auto text-center card my-2 py-2">
                 <h5>Embed</h5>
-                <div id="savitar-embed"></div>
+                <div id="swap-embed"></div>
             </div>
         </div>
 
@@ -25,10 +25,10 @@
 
     <script src='../index.js'></script>
     <script>
-        const SavitarEmbed = new SavitarWidget({
+        const SwapEmbed = new SwapWidget({
             mode: 'sandbox', 
             type: 'embed',
-            embedContainerId: 'savitar-embed'
+            embedContainerId: 'swap-embed'
         })
         .init()
         .on('ready', () => {
