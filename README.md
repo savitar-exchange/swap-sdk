@@ -2,11 +2,11 @@
 
 1 - Install package 
 
-`npm i https://github.com/swap-exchange/swap-sdk` 
+`npm install --save https://github.com/savitar-exchange/swap-sdk.git` 
 
 or 
 
-`yarn add https://github.com/swap-exchange/swap-sdk`
+`yarn add https://github.com/savitar-exchange/swap-sdk.git`
 
 2 - Import widget
 
