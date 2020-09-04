@@ -17,7 +17,7 @@ class SwapWidget {
             ...options
         }
 
-		this.base_url = 'https://swap.savitar.io/';
+		this.base_url = 'https://swap.savitar.io/widget';
 
         this.config = {...options.config}
         this.default_config = {...options.config}
@@ -123,7 +123,6 @@ class SwapWidget {
         
 		if (this.config?.email) src = `${src}&email=${this.config.email}`
 		if (this.config?.email_editable === true) src = `${src}&email_editable=${this.config.email_editable}`
-		if (this.config?.type) src = `${src}&payment_type=${this.config.type}`
 		if (this.config?.currency) src = `${src}&currency=${this.config.currency}`
 		if (this.config?.amount) src = `${src}&amount=${this.config.amount}`
 		if (this.config?.amount_editable === true) src = `${src}&amount_editable=${this.config.amount_editable}`
