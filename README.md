@@ -38,10 +38,6 @@ or
 # Modal
 Add a button or link with id `swap-init` (or edit `buttonId`)
 
-    <button class="swap-open" id="swap-init">
-        Pay with Swap
-    </button>
-
 #### Example 
 ###### HTML
 ```html
