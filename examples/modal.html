@@ -25,13 +25,17 @@
 
     </div>
 
-    <script src='../index.js'></script>
+    <script src='../dist/bundle.js'></script>
     <script>
-        const Swap = new SwapWidget({
+        // const SwapWidget = require('../dist/bundle.js')
+
+        new Swap.Widget({
             type: 'modal',
+            mode: 'sandbox',
             buttonId: 'swap-init',
             config: {
-                payment_type: 'merchant',
+                test: 1,
+                payment_type: 'iov',
                 email: 'user@test.com',
                 email_editable: true,
                 currency: 'btc',

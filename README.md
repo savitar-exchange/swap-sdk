@@ -1,6 +1,8 @@
 # Swap Widget
 
-1 - Install package 
+
+## Setup
+###### 1 - Install package 
 
 `npm install --save https://github.com/savitar-exchange/swap-sdk.git` 
 
@@ -8,37 +10,35 @@ or
 
 `yarn add https://github.com/savitar-exchange/swap-sdk.git`
 
-2 - Import widget
+###### 2 - Import widget
 
-`import SwapWidget from 'swap-sdk' `
+```javascript
+import * as Swap from 'swap-sdk'
+```
 
 or
-
-`const SwapWidget = require('swap-sdk')`
+```javascript
+const Swap = require('swap-sdk')
+```
 
 or 
 
-`<script type='text/javascript' src='./node_modules/swap-sdk/index.js'>`
-
-3 - Set configuration
-```javascript
-    const Swap = new SwapWidget({
-        type: 'modal'
-    })
+```html
+<script type='text/javascript' src='./node_modules/swap-sdk/dist/bundle.js'>
 ```
 
-4 - Init widget
+###### 3 - Set configuration and init widget
 ```javascript
-    Swap
-    .init({
-        email: 'user@test.com'
-    })
-````
+new Swap.Widget({
+    type: 'modal'
+}).init()
+```
 
-# Modal
-Add a button or link with id `swap-init` (or edit `buttonId`) which will open the widget in modal
+## Modal
+Add a button or link with id `swap-init` (or edit config `buttonId`) which will open the widget in modal
 
-#### Example 
+***Optional:*** *You can add the class `swap-open` to style the button*
+##### Example 
 ###### HTML
 ```html
 <button class="swap-open" id="swap-init">
@@ -48,7 +48,7 @@ Add a button or link with id `swap-init` (or edit `buttonId`) which will open th
 
 ###### JS
 ```javascript
-const Swap = new SwapWidget({
+new Swap.Widget({
     type: 'modal',
     config: {
         payment_type: 'merchant',
@@ -58,10 +58,10 @@ const Swap = new SwapWidget({
 ```
 
 
-# Embed
+## Embed
 Add a container with id `swap-embed` (or edit `embedContainerId`)
 
-    
+##### Example 
 ###### HTML
 ```html
 <div id="swap-embed"></div>
@@ -69,7 +69,7 @@ Add a container with id `swap-embed` (or edit `embedContainerId`)
 
 ###### JS
 ```javascript
-const Swap = new SwapWidget({
+new Swap.Widget({
     type: 'embed',
     config: {
         payment_type: 'merchant',
@@ -77,28 +77,30 @@ const Swap = new SwapWidget({
 })
 .init()
 ```
-# Buttons
+## Buttons
 
 Pay button with simple configuration
 
 ####  Attributes
-- `svt-email`: User email 
-- `svt-email-editable`: Allow user to change predefined email
-- `svt-amount`: Amount to order
-- `svt-amount-editable`: Allow user to modify amount
-- `svt-currency`: Select a currency 
-- `svt-order-type`: `buy` or `sell` 
-- `svt-delivery-address`: Address to send ordered coins
-- `svt-payment-type`: Payment type of widget (`merchant` / `exchange` / `iov` )
+- `svt-email`: User email - `string`
+- `svt-email-editable`: Allow user to change predefined email - `bool`
+- `svt-amount`: Amount to order - `float`
+- `svt-amount-editable`: Allow user to modify amount - `bool`
+- `svt-currency`: Select a currency - `string`
+- `svt-order-type`: `buy` or `sell` - `bool`
+- `svt-delivery-address`: Address to send ordered coins - `string`
+- `svt-payment-type`: Payment type of widget (`merchant` / `exchange` / `iov` / `sell` ) - `string`
 
-#### Example 
+##### Example 
 
 ###### JS
 ```javascript
-const Swap = new SwapWidget({
+const widget = new Swap.Widget({
     payButtons: true,
     payButtonsStyle: true
-}).init()
+})
+
+widget.init()
 ```
 ###### HTML
 ```html
@@ -109,32 +111,33 @@ const Swap = new SwapWidget({
 ```
 
 
-# Advanced
+## Advanced
 
-### Options
-- `mode`: `production` or `sandbox`    
-- `type`: `modal` or `embed`  
-- `payButtons`: `true` or `false` - Enable click events on swap buttons
-- `payButtonsStyle`:  `true` or `false` - Enable auto styling of buttons
-- `embedContainerId`: `swap-embed` - Embed container id
-- `iframeContainerClass`: `swap-widget-container` - iFrame container class
-- `buttonId`: `swap-init` - Modal button id
-- `config`: Widget configuration
+##### Options
+- `type`: `modal` or `embed` - `string` 
+- `payButtons`: `true` or `false` - Enable click events on swap buttons - `bool`
+- `payButtonsStyle`:  `true` or `false` - Enable auto styling of buttons - `bool`
+- `embedContainerId`: `swap-embed` - Embed container id - `string`
+- `iframeContainerClass`: `swap-widget-container` - iFrame container class - `string`
+- `buttonId`: `swap-init` - Modal button id - `string`
+- `config`: Widget configuration - `object`
 
-#### Config  
 
-- `email`: User email
-- `email_editable`: Allow user to change predefined email
-- `payment_type` : `merchant` / `exchange` / `sell` / `iov` - Payment type
-- `amount`: Amount to order
-- `amount_editable`: Allow user to modify amount
-- `currency`: Select a currency 
-- `order_type`: `buy` / `sell` 
-- `delivery_address`: Address to send ordered coins
+##### Config  
 
-####Example
+- `email`: User email - `string`
+- `email_editable`: Allow user to change predefined email - `bool`
+- `payment_type` : `merchant` | `exchange` | `sell` | `iov` - Payment type  - `string`
+- `amount`: Amount to order  - `float`
+- `amount_editable`: Allow user to modify amount - `bool`
+- `currency`: Select a currency  - `string`
+- `order_type`: `buy` | `sell` - `string`
+- `delivery_address`: Address to send ordered coins - `string`
 
-        type: 'modal' or 'embed',
+##### Example
+```javascript
+const opts = {
+        type: 'modal',
         buttonId: 'swap-init',
         config: {
             payment_type: 'merchant',
@@ -145,20 +148,18 @@ const Swap = new SwapWidget({
             amount_editable: false,
             delivery_address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX'
         }
-
+}
+```
 ### Listeners
+```javascript
 
-    Swap
+    widget
     .on(EVENT, () => {})
+    .on(EVENT, () => {})
+    .on(EVENT, () => {})
+```
 
-#### Chaining
-    Swap
-    .init()
-    .on(EVENT, () => {})
-    .on(EVENT, () => {})
-    .on(EVENT, () => {})
-
-#### Events
+##### Events
 - `ready`: Widget is loaded
 - `close`: Widget is close / canceled
 - `success`: Payment success

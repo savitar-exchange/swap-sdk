@@ -17,7 +17,7 @@
             </div>
             <div class="col-12 offset-md-3 col-md-6 text-center card my-2 py-2">
                 <h5>Pay Buttons (click on button to start)</h5>
-                <button type='svt-btn' svt-amount='50' svt-currency='usdt' svt-email='user@email.com' svt-order-type='buy'>Pay now !</button>
+                <button type='svt-btn' svt-payment-type='merchant' svt-amount='50' svt-currency='usdt' svt-email='user@email.com' svt-order-type='buy' >Pay now !</button>
                 <button type='svt-btn' svt-payment-type='merchant' svt-amount='150' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
                 <button type='svt-btn' svt-payment-type='exchange' svt-amount='50' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
                 <button type='svt-btn' svt-currency='xtz' />
@@ -27,9 +27,9 @@
 
     </div>
 
-    <script src='../index.js'></script>
+    <script src='../dist/bundle.js'></script>
     <script>
-        const Swap = new SwapWidget({
+        new Swap.Widget({
             payButtons: true,
             payButtonsStyle: true
         }).init()
