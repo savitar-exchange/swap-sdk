@@ -21,17 +21,19 @@ or
 `<script type='text/javascript' src='./node_modules/swap-sdk/index.js'>`
 
 3 - Set configuration
-
+```javascript
     const Swap = new SwapWidget({
         type: 'modal'
     })
+```
 
 4 - Init widget
-
+```javascript
     Swap
     .init({
         email: 'user@test.com'
     })
+````
 
 # Modal
 Add a button or link with id `swap-init` (or edit `buttonId`)
@@ -40,11 +42,45 @@ Add a button or link with id `swap-init` (or edit `buttonId`)
         Pay with Swap
     </button>
 
+#### Example 
+###### HTML
+```html
+<button class="swap-open" id="swap-init">
+    Pay with Swap
+</button>
+```
+
+###### JS
+```javascript
+const Swap = new SwapWidget({
+    type: 'modal',
+    config: {
+        type: 'merchant',
+    }
+})
+.init()
+```
+
+
 # Embed
 Add a container with id `swap-embed` (or edit `embedContainerId`)
 
-    <div id="swap-embed"></div>
+    
+###### HTML
+```html
+<div id="swap-embed"></div>
+```
 
+###### JS
+```javascript
+const Swap = new SwapWidget({
+    type: 'embed',
+    config: {
+        type: 'merchant',
+    }
+})
+.init()
+```
 # Buttons
 
 Pay button with simple configuration
@@ -57,19 +93,25 @@ Pay button with simple configuration
 - `svt-currency`: Select a currency 
 - `svt-order-type`: `buy` or `sell` 
 - `svt-delivery-address`: Address to send ordered coins
+- `svt-payment-type`: Payment type of widget (`merchant` / `exchange` / `iov` )
 
 #### Example 
-`<button
-    svt-email="user@email.com"> 
-    svt-email-editable="true"> 
-    svt-amount="50"> 
-    svt-amount-editable="true"
-    svt-currency="btc"
-    svt-order-type="buy"
-    svt-delivery-address="1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX"
-    > 
-Pay now !    
-</button>`
+
+###### JS
+```javascript
+const Swap = new SwapWidget({
+    payButtons: true,
+    payButtonsStyle: true
+}).init()
+```
+###### HTML
+```html
+<button type='svt-btn' svt-amount='50' svt-currency='usdt' svt-email='user@email.com' svt-order-type='buy'>Pay now !</button>
+<button type='svt-btn' svt-payment-type='merchant' svt-amount='150' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
+<button type='svt-btn' svt-payment-type='exchange' svt-amount='50' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
+<button type='svt-btn' svt-currency='xtz' />
+```
+
 
 # Advanced
 
@@ -83,18 +125,18 @@ Pay now !
 - `buttonId`: `swap-init` - Modal button id
 - `config`: Widget configuration
 
-#### config  
+#### Config  
 
 - `email`: User email
-- `email_-_editable`: Allow user to change predefined email
-- `payment_type` : `merchant` or `exchange` or `sell` or `iov` - Payment type
+- `email_editable`: Allow user to change predefined email
+- `payment_type` : `merchant` / `exchange` / `sell` / `iov` - Payment type
 - `amount`: Amount to order
 - `amount_editable`: Allow user to modify amount
 - `currency`: Select a currency 
-- `order_type`: `buy` or `sell` 
+- `order_type`: `buy` / `sell` 
 - `delivery_address`: Address to send ordered coins
 
-Example: 
+####Example
 
         type: 'modal' or 'embed',
         buttonId: 'swap-init',
@@ -119,7 +161,7 @@ Example:
     .on(EVENT, () => {})
     .on(EVENT, () => {})
     .on(EVENT, () => {})
-    
+
 #### Events
 - `ready`: Widget is loaded
 - `close`: Widget is close / canceled
