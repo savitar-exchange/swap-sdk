@@ -36,7 +36,7 @@ or
 ````
 
 # Modal
-Add a button or link with id `swap-init` (or edit `buttonId`)
+Add a button or link with id `swap-init` (or edit `buttonId`) which will open the widget in modal
 
 #### Example 
 ###### HTML
@@ -51,7 +51,7 @@ Add a button or link with id `swap-init` (or edit `buttonId`)
 const Swap = new SwapWidget({
     type: 'modal',
     config: {
-        type: 'merchant',
+        payment_type: 'merchant',
     }
 })
 .init()
@@ -72,7 +72,7 @@ Add a container with id `swap-embed` (or edit `embedContainerId`)
 const Swap = new SwapWidget({
     type: 'embed',
     config: {
-        type: 'merchant',
+        payment_type: 'merchant',
     }
 })
 .init()
@@ -137,7 +137,7 @@ const Swap = new SwapWidget({
         type: 'modal' or 'embed',
         buttonId: 'swap-init',
         config: {
-            type: 'merchant',
+            payment_type: 'merchant',
             email: 'user@test.com',
             email_editable: true,
             currency: 'btc',
