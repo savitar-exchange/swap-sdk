@@ -301,6 +301,7 @@ const globalStyles = `
         min-width: 540px;
         width: 100%;
         min-height: 480px;
+        height: 100%;
         border-color: transparent;
         border-width: 0;
         border-style: none;
