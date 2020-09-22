@@ -12,19 +12,23 @@ or
 
 ###### 2 - Import widget
 
+**ES2020**
 ```javascript
 import * as Swap from 'swap-sdk'
 ```
 
-or
+**Vanilla**
 ```javascript
 const Swap = require('swap-sdk')
 ```
-
-or 
-
+**HTML import**
 ```html
 <script type='text/javascript' src='./node_modules/swap-sdk/dist/bundle.js'>
+```
+
+**CDN**
+```html
+<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/savitar-exchange/swap-sdk/dist/bundle.js'>
 ```
 
 ###### 3 - Set configuration and init widget
