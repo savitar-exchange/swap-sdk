@@ -17,7 +17,7 @@
             </div>
             <div class="col-12 col-md-6 mx-auto text-center card my-2 py-2">
                 <h5>Embed</h5>
-                <div id="swap-embed"></div>
+                <div id="swap-embed" style="height:600px"></div>
             </div>
         </div>
 
@@ -27,7 +27,14 @@
     <script>
         new Swap.Widget({
             type: 'embed',
-            embedContainerId: 'swap-embed'
+            config: {
+                email: 'user@test.com',
+                email_editable: true,
+                currency: 'btc',
+                amount: 200,
+                amount_editable: true,
+                delivery_address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX'
+            }
         })
         .init()
         .on('ready', () => {

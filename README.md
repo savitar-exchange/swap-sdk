@@ -54,9 +54,6 @@ Add a button or link with id `swap-init` (or edit config `buttonId`) which will 
 ```javascript
 new Swap.Widget({
     type: 'modal',
-    config: {
-        payment_type: 'merchant',
-    }
 })
 .init()
 ```
@@ -74,10 +71,7 @@ Add a container with id `swap-embed` (or edit `embedContainerId`)
 ###### JS
 ```javascript
 new Swap.Widget({
-    type: 'embed',
-    config: {
-        payment_type: 'merchant',
-    }
+    type: 'embed'
 })
 .init()
 ```
@@ -109,9 +103,11 @@ widget.init()
 ###### HTML
 ```html
 <button type='svt-btn' svt-amount='50' svt-currency='usdt' svt-email='user@email.com' svt-order-type='buy'>Pay now !</button>
-<button type='svt-btn' svt-payment-type='merchant' svt-amount='150' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
-<button type='svt-btn' svt-payment-type='exchange' svt-amount='50' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
+<button type='svt-btn' svt-amount='150' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
+<button type='svt-btn' svt-amount='50' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
 <button type='svt-btn' svt-currency='xtz' />
+<button type='svt-btn' svt-payment-type='iov' svt-email='user@email.com' svt-email-editable='true' >Buy Starname<button/>
+<button type='svt-btn' svt-email='user@email.com' svt-email-editable='true' svt-currency='iov' svt-amount='100'/>
 ```
 
 
@@ -144,7 +140,6 @@ const opts = {
         type: 'modal',
         buttonId: 'swap-init',
         config: {
-            payment_type: 'merchant',
             email: 'user@test.com',
             email_editable: true,
             currency: 'btc',

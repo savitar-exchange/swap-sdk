@@ -12,12 +12,20 @@
 <body>
     <div class="container my-4">
         <div class="row">
+            <div class="row">
+                <div class="col-12 text-center my-2">
+                    <h3>Buy IOV Starname and IOV example (buttons)</h3>
+                </div>
+                <div class="col-12 offset-md-3 col-md-6 text-center my-2 py-2">
+                    <button type='svt-btn' svt-payment-type='iov' svt-email='user@email.com' svt-email-editable='true'>Buy Starname</button>
+                    <button type='svt-btn' svt-email='user@email.com' svt-email-editable='true' svt-currency='iov' svt-amount='100'/>
+                </div>
+            </div>
             <div class="col-12 text-center my-2">
                 <h3>Buy IOV Starname example</h3>
             </div>
             <div class="col-12 offset-md-3 col-md-6 text-center my-2 py-2">
                 <div id="swap-embed" style="height: 600px;"></div>
-
             </div>
         </div>
 
@@ -25,6 +33,14 @@
 
     <script src='../dist/bundle.js'></script>
     <script>
+
+        // Buttons config
+        new Swap.Widget({
+            payButtons: true,
+            payButtonsStyle: true
+        }).init()
+
+        // Embed config
         new Swap.Widget({
             type: 'embed',
             config: {
