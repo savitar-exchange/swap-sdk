@@ -1,8 +1,33 @@
 # Swap Widget
 
+Demo: [https://swap.savitar.io/widget](https://swap.savitar.io/widget)
 
-## Setup
-###### 1 - Install package 
+For direct API connection, please see [https://doc.savitar.io/api/](https://doc.savitar.io/api/)
+
+## Index
+
+1. **[Install](#install)**
+
+    * [NPM](#npm)
+
+2. **[Quick Start](#quick-start)**
+
+    * [Initialize the client](#initialize-the-client)
+    * [Modal mode](#mode-modal)
+    * [Embed mode](#mode-embed)
+
+3. **[Configurations](#configurations)**
+    
+    * [For wallets](#for-wallets)
+    * [IOV](#iov)
+
+4. **[Advanced](#advanced)**
+    * [Callbacks](#callbacks)
+
+5. **[About](#about)**
+
+## Install
+### NPM
 
 `npm install --save https://github.com/savitar-exchange/swap-sdk.git` 
 
@@ -10,71 +35,89 @@ or
 
 `yarn add https://github.com/savitar-exchange/swap-sdk.git`
 
-###### 2 - Import widget
+## Quick Start
 
-**ES2020**
-```javascript
-import * as Swap from 'swap-sdk'
-```
+### Initialize the client
 
-**Vanilla**
-```javascript
-const Swap = require('swap-sdk')
-```
-**HTML import**
-```html
-<script type='text/javascript' src='./node_modules/swap-sdk/dist/bundle.js'>
-```
+```js
+var Swap = require('swap-sdk');
+// OR
+import * as Swap from 'swap-sdk';
 
-**CDN**
-```html
-<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/savitar-exchange/swap-sdk/dist/bundle.js'>
-```
-
-###### 3 - Set configuration and init widget
-```javascript
 new Swap.Widget({
     type: 'modal'
 }).init()
 ```
 
-## Modal
-Add a button or link with id `swap-init` (or edit config `buttonId`) which will open the widget in modal
+### Mode `modal`
+This mode loads an overlay on the click of a button or a link with id `buttonId`.
 
-***Optional:*** *You can add the class `swap-open` to style the button*
-##### Example 
-###### HTML
-```html
-<button class="swap-open" id="swap-init">
-    Pay with Swap
-</button>
-```
-
-###### JS
-```javascript
+```js
 new Swap.Widget({
     type: 'modal',
+    buttonId: 'swap-button',
 })
 .init()
 ```
 
 
-## Embed
-Add a container with id `swap-embed` (or edit `embedContainerId`)
+### Mode `embed`
+This mode loads the widget in the DOM node of your choice parametrized with `embedContainerId`
 
-##### Example 
-###### HTML
-```html
-<div id="swap-embed"></div>
-```
-
-###### JS
-```javascript
+```js
 new Swap.Widget({
-    type: 'embed'
+    type: 'embed',
+    embedContainerId: 'swap-widget',
 })
 .init()
 ```
+
+## Configurations
+
+List of parameters of Swap.Widget config:
+
+```js
+new Swap.Widget({
+    type: 'embed',
+    embedContainerId: 'swap-widget',
+    config: {
+      // input parameters here
+    }
+})
+.init()
+```
+
+### For wallets
+
+- `email` (optional): User email - `string`
+- `email_editable` (optional): Allow user to change predefined email - `bool`
+- `currency` (optional): Currency of the order  - `string`
+- `order_type` (optional): `buy` | `sell` - `string`
+- `amount` (optional): Amount of the order  - `float`
+- `amount_currency` (optional): Currency of the order  - `string`
+- `amount_editable` (optional): Allow user to modify amount - `bool`
+- `delivery_address` (optional): Address to send ordered coins - `string`
+
+### IOV
+
+#### Buy a domain
+
+- `payment_type`: `iov`,
+- `email` (optional): User email - `string`
+- `email_editable` (optional): Allow user to change predefined email - `bool`
+- `delivery_address` (optional): Owner of the domain - `string`
+
+#### Buy IOVs
+
+- `currency`: `IOV`  - `string`
+- `order_type`: `buy` - `string`
+- `email` (optional): User email - `string`
+- `email_editable` (optional): Allow user to change predefined email - `bool`
+- `amount` (optional): Amount of the order  - `float`
+- `amount_currency` (optional): `IOV` or `EUR`  - `string`
+- `amount_editable` (optional): Allow user to modify amount - `bool`
+- `delivery_address` (optional): Address to send ordered coins - `string`
+
 ## Buttons
 
 Pay button with simple configuration
@@ -111,8 +154,6 @@ widget.init()
 ```
 
 
-## Advanced
-
 ##### Options
 - `type`: `modal` or `embed` - `string` 
 - `payButtons`: `true` or `false` - Enable click events on swap buttons - `bool`
@@ -121,18 +162,6 @@ widget.init()
 - `iframeContainerClass`: `swap-widget-container` - iFrame container class - `string`
 - `buttonId`: `swap-init` - Modal button id - `string`
 - `config`: Widget configuration - `object`
-
-
-##### Config  
-
-- `email`: User email - `string`
-- `email_editable`: Allow user to change predefined email - `bool`
-- `payment_type` : `merchant` | `exchange` | `sell` | `iov` - Payment type  - `string`
-- `amount`: Amount to order  - `float`
-- `amount_editable`: Allow user to modify amount - `bool`
-- `currency`: Select a currency  - `string`
-- `order_type`: `buy` | `sell` - `string`
-- `delivery_address`: Address to send ordered coins - `string`
 
 ##### Example
 ```javascript
@@ -149,22 +178,27 @@ const opts = {
         }
 }
 ```
-### Listeners
+
+## Advanced
+
+### Callbacks
 ```javascript
 
     widget
-    .on(EVENT, () => {})
-    .on(EVENT, () => {})
-    .on(EVENT, () => {})
+    .on('ready', () => {
+      // widget has loaded
+    })
+    .on('close', () => {
+      // user has closed widget
+    })
+    .on('success', () => {
+      // user has successfully paid
+    })
+    .on('failure', () => {
+      // payment failure
+    })
 ```
 
-##### Events
-- `ready`: Widget is loaded
-- `close`: Widget is close / canceled
-- `success`: Payment success
-- `failure`: Payment failure
-
-
-
 ## About
-Website: https://swap.savitar.io
+
+Website: [https://swap.savitar.io](https://swap.savitar.io)
