@@ -89,48 +89,48 @@ new Swap.Widget({
 
 ### For wallets
 
-- `email` (optional): User email - `string`
-- `email_editable` (optional): Allow user to change predefined email - `bool`
-- `currency` (optional): Currency of the order  - `string`
-- `order_type` (optional): `buy` | `sell` - `string`
-- `amount` (optional): Amount of the order  - `float`
-- `amount_currency` (optional): Currency of the order  - `string`
-- `amount_editable` (optional): Allow user to modify amount - `bool`
-- `delivery_address` (optional): Address to send ordered coins - `string`
+- `email` (optional): User email - `string`- default `null`
+- `email_editable` (optional): Allow user to change predefined email- `bool` - default `true`
+- `currency` (optional): Currency of the order - `string`- default `null`
+- `order_type` (optional): `buy` | `sell`  - `string`- default `buy`
+- `amount` (optional): Amount of the order  - `float`- default `25`
+- `amount_currency` (optional): Currency of amount  - `string` - default `eur`
+- `amount_editable` (optional): Allow user to modify amount - `bool` - default `true`
+- `delivery_address` (optional): Address to send ordered coins - `string`- default `null`
 
 ### IOV
 
 #### Buy a domain
 
 - `payment_type`: `iov`,
-- `email` (optional): User email - `string`
-- `email_editable` (optional): Allow user to change predefined email - `bool`
-- `delivery_address` (optional): Owner of the domain - `string`
+- `email` (optional): User email - `string` - default `null`
+- `email_editable` (optional): Allow user to change predefined email - `bool` - default `true`
+- `delivery_address` (optional): Owner of the domain - `string` - default `null`
 
 #### Buy IOVs
 
 - `currency`: `IOV`  - `string`
-- `order_type`: `buy` - `string`
-- `email` (optional): User email - `string`
-- `email_editable` (optional): Allow user to change predefined email - `bool`
-- `amount` (optional): Amount of the order  - `float`
-- `amount_currency` (optional): `IOV` or `EUR`  - `string`
-- `amount_editable` (optional): Allow user to modify amount - `bool`
-- `delivery_address` (optional): Address to send ordered coins - `string`
+- `email` (optional): User email - `string` - default `null`
+- `email_editable` (optional): Allow user to change predefined email - `bool` - default `true`
+- `amount` (optional): Amount of the order  - `float` - default `25`
+- `amount_currency` (optional): `IOV` or `EUR`  - `string` - default `EUR`
+- `amount_editable` (optional): Allow user to modify amount - `bool` - default `true`
+- `delivery_address` (optional): Address to send ordered coins - `string` - default `null`
 
 ## Buttons
 
 Pay button with simple configuration
 
 ####  Attributes
-- `svt-email`: User email - `string`
-- `svt-email-editable`: Allow user to change predefined email - `bool`
-- `svt-amount`: Amount to order - `float`
-- `svt-amount-editable`: Allow user to modify amount - `bool`
-- `svt-currency`: Select a currency - `string`
-- `svt-order-type`: `buy` or `sell` - `bool`
-- `svt-delivery-address`: Address to send ordered coins - `string`
-- `svt-payment-type`: Payment type of widget (`merchant` / `exchange` / `iov` / `sell` ) - `string`
+- `svt-currency`: Currency of order - `string` - default `null`
+- `svt-email` (optional): User email - `string` - default `null`
+- `svt-email-editable` (optional): Allow user to change predefined email - `bool` - default `true`
+- `svt-amount` (optional): Amount to order - `float` - default `25`
+- `svt-amount-editable` (optional): Allow user to modify amount - `bool`
+- `svt-amount-currency` (optional): Currency of amount (ex: `btc`)  - `string` - default `eur`
+- `svt-order-type` (optional): `buy` | `sell` - `string` - default `buy`
+- `svt-delivery-address` (optional): Address to send ordered coins - `string` - default `null`
+- `svt-payment-type` (optional): Payment type of widget (`merchant` / `exchange` / `iov` ) - `string` - default `null`
 
 ##### Example 
 
@@ -146,11 +146,12 @@ widget.init()
 ###### HTML
 ```html
 <button type='svt-btn' svt-amount='50' svt-currency='usdt' svt-email='user@email.com' svt-order-type='buy'>Pay now !</button>
-<button type='svt-btn' svt-amount='150' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
+<button type='svt-btn' svt-amount='1' svt-currency='btc' svt-amount-currency='btc' />
 <button type='svt-btn' svt-amount='50' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
 <button type='svt-btn' svt-currency='xtz' />
-<button type='svt-btn' svt-payment-type='iov' svt-email='user@email.com' svt-email-editable='true' >Buy Starname<button/>
-<button type='svt-btn' svt-email='user@email.com' svt-email-editable='true' svt-currency='iov' svt-amount='100'/>
+<button type='svt-btn' svt-payment-type='iov' svt-email='user@email.com' svt-email-editable='false' >Buy Starname<button/>
+<button type='svt-btn' svt-email='user@email.com' svt-currency='iov' svt-amount='100'/>
+<button type='svt-btn' svt-order-type='sell' svt-currency='iov' svt-amount='100'/>
 ```
 
 
@@ -183,6 +184,7 @@ const opts = {
 
 ### Callbacks
 ```javascript
+    const widget = new Swap.Widget().init()
 
     widget
     .on('ready', () => {
@@ -197,6 +199,18 @@ const opts = {
     .on('failure', () => {
       // payment failure
     })
+```
+
+### Methods
+
+Init modal in your script
+```javascript
+    const widget = new Swap.Widget({
+        type:'modal'
+    }).init()
+
+    widget
+    .openModal()
 ```
 
 ## About

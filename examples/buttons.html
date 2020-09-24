@@ -19,19 +19,20 @@
                 <h5>Pay Buttons (click on button to start)</h5>
                 <button type='svt-btn' svt-amount='50' svt-currency='usdt' svt-email='user@email.com' svt-order-type='buy'>Pay now !</button>
                 <button type='svt-btn' svt-amount='150' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
-                <button type='svt-btn' svt-amount='50' svt-currency='btc' svt-delivery-address='367pVvSShqKzBZBA4eqHLwHB41g9NAphTd' />
+                <button type='svt-btn' svt-amount='25' svt-currency='btc' />
                 <button type='svt-btn' svt-currency='xtz' />
-                <button type='svt-btn' svt-payment-type='iov' svt-email='user@email.com' svt-email-editable='true'>Buy Starname</button>
-                <button type='svt-btn' svt-email='user@email.com' svt-email-editable='true' svt-currency='iov' svt-amount='100'/>
+                <button type='svt-btn' svt-order-type='sell' svt-currency='btc' svt-amount='150' svt-amount-currency='eur' />
+                <button type='svt-btn' svt-payment-type='iov' svt-email='user@email.com' svt-email-editable='false'>Buy a Starname</button>
+                <button type='svt-btn' svt-email='user@email.com' svt-currency='iov' svt-amount='100'/>
+                <button type='svt-btn' svt-currency='btc' />
 
             </div>
         </div>
-
     </div>
 
     <script src='../dist/bundle.js'></script>
     <script>
-        new Swap.Widget({
+        const widget = new Swap.Widget({
             payButtons: true,
             payButtonsStyle: true
         }).init()
