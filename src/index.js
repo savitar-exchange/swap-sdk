@@ -120,10 +120,12 @@ export class Widget {
         let src = `${this.base_url}?type=${this.widgetType}`
         
 		if (this.config?.email) src = `${src}&email=${this.config.email}`
-		if (this.config?.email_editable === true) src = `${src}&email_editable=${this.config.email_editable}`
+        src = `${src}&email_editable=${this.config?.email_editable || 'true'}`
+        
 		if (this.config?.currency) src = `${src}&currency=${this.config.currency}`
 		if (this.config?.amount) src = `${src}&amount=${this.config.amount}`
-		if (this.config?.amount_editable === true) src = `${src}&amount_editable=${this.config.amount_editable}`
+		if (this.config?.amount_currency) src = `${src}&amount_currency=${this.config.amount_currency}`
+		src = `${src}&amount_editable=${this.config?.amount_editable || 'true'}`
 		if (this.config?.delivery_address) src = `${src}&delivery_address=${this.config.delivery_address}`
 		if (this.config?.payment_type) src = `${src}&payment_type=${this.config.payment_type}`
 		if (this.config?.order_type) src = `${src}&order_type=${this.config.order_type}`
@@ -158,14 +160,20 @@ export class Widget {
                 const amount = e.getAttribute('svt-amount')
                 const currency = e.getAttribute('svt-currency')
                 const payment_type = e.getAttribute('svt-payment-type')
+                const order_type = e.getAttribute('svt-order-type') || 'buy'
+                const amount_currency = e.getAttribute('svt-amount-currency') || 'eur'
 
                 let text
                 
 
                 text = payment_type === 'merchant' ? 'Pay ' : 'Buy '
+                text = order_type === 'sell' ? 'Sell ' : text
 
-                if(amount) text += amount+'€ '
-                if(currency) text += (amount ? 'in ' : '')+currency
+                const currencyUnit = amount_currency === 'eur' ? '€' : currency.toUpperCase()
+                if(amount) text += amount+' '+currencyUnit+' '
+
+                const amountUnit = amount_currency !== 'eur' ? 'EUR' : currency.toUpperCase()
+                if(currency) text += (amount ? 'in ' : '')+amountUnit
 
                 e.textContent = text ? text : 'Pay now with Swap'
             }
@@ -184,6 +192,7 @@ export class Widget {
             const email_editable = element.getAttribute('svt-email-editable') === 'true'
             const amount = element.getAttribute('svt-amount')
             const amount_editable = element.getAttribute('svt-amount-editable') === 'true'
+            const amount_currency = element.getAttribute('svt-amount-currency')
             const currency = element.getAttribute('svt-currency')
             const delivery_address = element.getAttribute('svt-delivery-address')
             const payment_type = element.getAttribute('svt-payment-type')
@@ -192,6 +201,7 @@ export class Widget {
             if (!self.widgetStarted) {
                 if(amount) this.config.amount = amount
                 if(amount_editable) this.config.amount_editable = amount_editable                
+                if(amount_currency) this.config.amount_currency = amount_currency                
                 if(email) this.config.email = email
                 if(email_editable) this.config.email_editable = email_editable
                 if(currency) this.config.currency = currency
@@ -301,7 +311,6 @@ const globalStyles = `
         min-width: 540px;
         width: 100%;
         min-height: 480px;
-        height: 100%;
         border-color: transparent;
         border-width: 0;
         border-style: none;
