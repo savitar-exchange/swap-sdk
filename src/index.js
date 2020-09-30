@@ -129,6 +129,7 @@ export class Widget {
 		if (this.config?.delivery_address) src = `${src}&delivery_address=${this.config.delivery_address}`
 		if (this.config?.payment_type) src = `${src}&payment_type=${this.config.payment_type}`
 		if (this.config?.order_type) src = `${src}&order_type=${this.config.order_type}`
+		if (this.config?.broker_address) src = `${src}&broker_address=${this.config.broker_address}`
         
 		this.iframe.setAttribute('src', src)
 		this.iframe.setAttribute('id', this.iframeContainerClass)
@@ -197,6 +198,7 @@ export class Widget {
             const delivery_address = element.getAttribute('svt-delivery-address')
             const payment_type = element.getAttribute('svt-payment-type')
             const order_type = element.getAttribute('svt-order-type')
+            const broker_address = element.getAttribute('svt-broker-address')
 
             if (!self.widgetStarted) {
                 if(amount) this.config.amount = amount
@@ -208,6 +210,7 @@ export class Widget {
                 if(delivery_address) this.config.delivery_address = delivery_address
                 if(payment_type) this.config.payment_type = payment_type
                 if(order_type) this.config.order_type = order_type
+                if(broker_address) this.config.broker_address = broker_address
 
                 self.openModal()
             }
