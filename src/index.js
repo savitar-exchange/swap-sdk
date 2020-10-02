@@ -6,7 +6,7 @@ const DEFAULT_OPTS = {
     embedContainerId: 'swap-embed',
     iframeContainerClass: 'swap-widget-container',
     buttonId: 'swap-init',
-    payButtons: true,
+    payButtons: false,
     payButtonsStyle: true,
     config: {}
 }
@@ -109,7 +109,7 @@ export class Widget {
     }
     openModal() {
 		if (this.widgetStarted) return
-        
+
 		this.iframe = this.initIframe()
 		this.iframe.setAttribute('style', iframeStyle)
 
@@ -187,7 +187,7 @@ export class Widget {
         let element = event.target
         
         if ( (element.tagName === 'BUTTON' || element.tagName === 'SAVITAR') ) {
-            if( !element.attributes?.type?.value === 'svt-btn' ) return
+            if( element.attributes?.type?.value !== 'svt-btn' ) return
 
             const email = element.getAttribute('svt-email')
             const email_editable = element.getAttribute('svt-email-editable') === 'true'
