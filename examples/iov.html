@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget embed example</title>
+    <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
+
+    <!-- <link href="./assets/css/bootstrap.min.css" rel="stylesheet"> -->
+    <style>
+            .margin{
+                margin: 10px,
+            }
+            .styleDiv {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+            }
+            .styleEmbed {
+                border: 1px solid red;
+                height: 67%;
+                width: 49%;
+            }
+            .styleSpan{
+                border: 1px solid black;
+                background-color: black;
+                color: white;
+            }
+    </style>
+
+</head>
+<body>
+         <div class='margin'>
+            <p>
+               Check out Savitar's <a href="https://github.com/savitar-exchange/swap-sdk" target="_blank" rel="noopener noreferrer">swap-sdk</a> for more configuration options and event listener documentation.
+            </p>
+
+            <p>
+               The code for this web page is <a href="https://github.com/iov-one/savitar-widgets/blob/master/src/App.js" target="_blank" rel="noopener noreferrer">here</a>.
+            </p>
+
+            <fieldset class='margin'>
+               <legend>Modal Widget</legend>
+               <div class='styleDiv'>
+                  <button id="button-starname">
+                     Buy A Starname
+                  </button>
+
+                  <button id="button-tokens">
+                     Buy IOV Tokens
+                  </button>
+
+                  <span id="span-starname" class="styleSpan">
+                     Buy A Starname
+                  </span>
+
+                  <span id="span-tokens" class="styleSpan">
+                     Buy IOV Tokens
+                  </span>
+               </div>
+            </fieldset>
+            <fieldset class='margin'>
+               <legend>Embedded Widget</legend>
+               <div class='styleDiv'>
+                  <div id="div-starname" class='styleEmbed'></div>
+
+                  <div id="div-tokens" class='styleEmbed'></div>
+               </div>
+            </fieldset>
+         </div>
+
+
+         <script src='../dist/bundle.js'></script>
+            <script>
+            // mode
+            const mode = "sandbox";
+
+            /* @jloup
+            As a general rule : if you do not specify payment_type in configuration, everything is optional even delivery address.
+            - Buying domain is a custom flow, you must set payment_type=iov and delivery_address
+            - Buying IOVs: you can leave payment_type empty and set currency=iov
+            */
+
+            // configuration for buying a starname
+            const configStarname = {
+                payment_type: "iov",
+                email: "starname@example.com",
+                email_editable: true,
+            };
+            // configuration for buying IOV tokens
+            const configTokens = {
+                email: "tokens@example.com",
+                email_editable: true,
+                currency: "iov",
+                amount: 10,
+                amount_editable: true,
+            };
+
+            // embedded widget
+            const embeddedStarname = new Swap.Widget( {
+                type: "embed",
+                embedContainerId: "div-starname",
+                mode: mode,
+                config: configStarname,
+            } );
+            const embeddedTokens = new Swap.Widget( {
+                type: "embed",
+                embedContainerId: "div-tokens",
+                mode: mode,
+                config: configTokens,
+            } );
+
+            // modal buttons
+            const modalButtonStarname = new Swap.Widget( {
+                type: "modal",
+                buttonId: "button-starname",
+                mode: mode,
+                config: configStarname,
+            } );
+            const modalButtonTokens = new Swap.Widget( {
+                type: "modal",
+                buttonId: "button-tokens",
+                mode: mode,
+                config: configTokens,
+            } );
+
+            // modal spans
+            const modalSpanStarname = new Swap.Widget( {
+                type: "modal",
+                buttonId: "span-starname", // use buttonId despite applyling to a span
+                mode: mode,
+                config: configStarname,
+            } );
+            const modalSpanTokens = new Swap.Widget( {
+                type: "modal",
+                buttonId: "span-tokens", // use buttonId despite applyling to a span
+                mode: mode,
+                config: configTokens,
+            } );
+
+
+        [
+            embeddedStarname,
+            embeddedTokens,
+            modalButtonStarname,
+            modalButtonTokens,
+            modalSpanStarname,
+            modalSpanTokens,
+        ].forEach( savitar => savitar.init())
+        </script>
+</body>
+</html>
