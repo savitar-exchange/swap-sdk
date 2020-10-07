@@ -222,11 +222,8 @@ export class Widget {
 
         buttonContainer.appendChild(button)
 
-
-
         container.appendChild(titleSpan)
         container.appendChild(buttonContainer)
-        
 	}  
 	initEmbed(id) {
         let embedContainer = document.getElementById(id)
@@ -488,7 +485,6 @@ const noCookiesStyle = (id) => {
         align-items: center;
     }
     #${id} > span {
-        color: red;
     } 
 
 `
