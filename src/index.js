@@ -410,7 +410,7 @@ const globalStyles = `
         display: inline-block;
         font-weight: 400;
         color: #ffffff;
-
+        width: 120px;
         text-align: center;
         vertical-align: middle;
         -webkit-user-select: none;
