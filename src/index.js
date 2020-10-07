@@ -1,4 +1,39 @@
-  
+// ### Center popup multi-display
+function FindLeftScreenBoundry()
+{
+    // Check if the window is off the primary monitor in a positive axis
+    // X,Y                  X,Y                    S = Screen, W = Window
+    // 0,0  ----------   1280,0  ----------
+    //     |          |         |  ---     |
+    //     |          |         | | W |    |
+    //     |        S |         |  ---   S |
+    //      ----------           ----------
+    if (window.leftWindowBoundry() > window.screen.width)
+    {
+        return window.leftWindowBoundry() - (window.leftWindowBoundry() - window.screen.width);
+    }
+
+    // Check if the window is off the primary monitor in a negative axis
+    // X,Y                  X,Y                    S = Screen, W = Window
+    // 0,0  ----------  -1280,0  ----------
+    //     |          |         |  ---     |
+    //     |          |         | | W |    |
+    //     |        S |         |  ---   S |
+    //      ----------           ----------
+    // This only works in Firefox at the moment due to a bug in Internet Explorer opening new windows into a negative axis
+    // However, you can move opened windows into a negative axis as a workaround
+    if (window.leftWindowBoundry() < 0 && window.leftWindowBoundry() > (window.screen.width * -1))
+    {
+        return (window.screen.width * -1);
+    }
+
+    // If neither of the above, the monitor is on the primary monitor whose's screen X should be 0
+    return 0;
+}
+
+window.leftScreenBoundry = FindLeftScreenBoundry;
+// ### https://stackoverflow.com/questions/16363474/window-open-on-a-multi-monitor-dual-monitor-system-where-does-window-pop-up
+
 
 const DEFAULT_OPTS = {
     type: 'modal',
@@ -24,11 +59,12 @@ export class Widget {
         this.widgetStarted = false
 
         this.widgetType = options.type
-		this.iframe = document.createElement('iframe')
+        this.iframe = document.createElement('iframe')
         this.iframeContainerClass = options.iframeContainerClass
         this.embedContainerId = options.embedContainerId
         this.buttonId = options.buttonId
         this.payButtons = options.payButtons
+        this.popup
 
 		this.injectStyle()
 
@@ -101,9 +137,11 @@ export class Widget {
         if ( (element.tagName === 'BUTTON' || element.tagName === 'SPAN')
         && element.attributes.id ) {
 
-            if (element.attributes.id.value === this.buttonId 
+            if (element.attributes.id.value === self.buttonId 
                 && !self.widgetStarted) {
-                    self.openModal()
+                    self.checkIframeCookie((status) => {
+                        return status ? self.openModal() : self.openPopup()
+                    })
             }
         }
     }
@@ -115,6 +153,53 @@ export class Widget {
 
         this.widgetStarted = true
 		document.body.appendChild(this.iframe)
+    }
+    openPopup(){
+        const popupWidth = 400
+        const popupHeight = 550
+
+        let src = `${this.base_url}?type=${this.widgetType}`
+        
+		if (this.config?.email) src = `${src}&email=${this.config.email}`
+        src = `${src}&email_editable=${this.config?.email_editable || 'true'}`
+        
+		if (this.config?.currency) src = `${src}&currency=${this.config.currency}`
+		if (this.config?.amount) src = `${src}&amount=${this.config.amount}`
+		if (this.config?.amount_currency) src = `${src}&amount_currency=${this.config.amount_currency}`
+		src = `${src}&amount_editable=${this.config?.amount_editable || 'true'}`
+		if (this.config?.delivery_address) src = `${src}&delivery_address=${this.config.delivery_address}`
+		if (this.config?.payment_type) src = `${src}&payment_type=${this.config.payment_type}`
+		if (this.config?.order_type) src = `${src}&order_type=${this.config.order_type}`
+		if (this.config?.broker_address) src = `${src}&broker_address=${this.config.broker_address}`
+
+
+        // Fixes dual-screen position                             Most browsers      Firefox
+        const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
+        const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
+
+        const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width
+        const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height
+
+        const systemZoom = width / window.screen.availWidth
+        const left = (width - popupWidth) / 2 / systemZoom + dualScreenLeft
+        const top = (height - popupHeight) / 2 / systemZoom + dualScreenTop
+
+        const opts = `
+            directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,
+            width=${popupWidth / systemZoom}, 
+            height=${popupHeight / systemZoom}, 
+            top=${top}, 
+            left=${left}
+        `
+        this.popup = window.open(src, 'Savitar Swap', opts)
+        if (window.focus) this.popup.focus()
+
+        this.popup.addEventListener("beforeunload", function(event) {
+            console.log("UNLOAD:1");
+            //event.preventDefault();
+            //event.returnValue = null; //"Any text"; //true; //false;
+            //return null; //"Any text"; //true; //false;
+          });
     }
     initIframe() {
         let src = `${this.base_url}?type=${this.widgetType}`
@@ -212,7 +297,7 @@ export class Widget {
                 if(order_type) this.config.order_type = order_type
                 if(broker_address) this.config.broker_address = broker_address
 
-                self.openModal()
+                self.openPopup()
             }
         }
     }
@@ -258,7 +343,30 @@ export class Widget {
         
 		this.widgetStarted = false
         document.body.appendChild(this.iframe)
-	}
+    }
+    checkIframeCookie(callback) {
+        const receiveMessage = (event) => {
+        console.log('receivedMessage', event)
+          if (event.origin !== "http://exchange.savitar.devel" && event.origin !== "https://exchange.savitar.io") return
+          if (event.data === "iframecookie=true") {
+            callback(true)
+            ifrm.remove()
+          } else if (event.data === "iframecookie=false") {
+            callback(false)
+            ifrm.remove()
+          }
+          window.removeEventListener("message", receiveMessage)
+        }
+
+        window.addEventListener("message", receiveMessage, false)
+        const ifrm = document.createElement('iframe')
+        ifrm.setAttribute("src", "http://exchange.savitar.devel/api/v0/checkcookie")
+        ifrm.setAttribute("frameBorder", "0")
+        ifrm.style.width = "1px"
+        ifrm.style.height = "1px"
+
+        document.body.appendChild(ifrm)
+    }
 }
 
 let iframeStyle = `
