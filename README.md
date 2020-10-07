@@ -197,10 +197,10 @@ const opts = {
     .on('close', () => {
       // user has closed widget
     })
-    .on('success', () => {
+    .on('success', (quote) => {
       // user has successfully paid
     })
-    .on('failure', () => {
+    .on('failure', (quote) => {
       // payment failure
     })
 ```
