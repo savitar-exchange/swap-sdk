@@ -1,7 +1,7 @@
 const Dotenv = require('dotenv-webpack');
 
 module.exports = (env, args) => {
-  const dotenvFile = args.mode ? '.env.'+args.mode : '.env.production'
+  const dotenvFile = env.config ? '.env.'+env.config : '.env.production'
 
   console.info('[DOTENV] Using: '+dotenvFile)
   return {

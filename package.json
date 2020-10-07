@@ -1,13 +1,14 @@
 {
   "name": "swap-sdk",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Savitar Swap SDK",
   "homepage": "https://github.com/savitar-exchange/swap-sdk#readme",
   "main": "dist/bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode production",
-    "build:devel": "webpack --mode development"
+    "build": "webpack --mode production --env.config=production",
+    "build:devel": "webpack --mode development --env.config=development",
+    "build:dev": "webpack --mode development --env.config=dev"
   },
   "author": "Savitar <CorentinGC>",
   "license": "ISC",

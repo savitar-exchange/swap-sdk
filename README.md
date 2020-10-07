@@ -97,6 +97,7 @@ new Swap.Widget({
 - `amount_currency` (optional): Currency of amount  - `string` - default `eur`
 - `amount_editable` (optional): Allow user to modify amount - `bool` - default `true`
 - `delivery_address` (optional): Address to send ordered coins - `string`- default `null`
+- `hide_confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
 
 ### IOV
 
@@ -106,6 +107,7 @@ new Swap.Widget({
 - `email` (optional): User email - `string` - default `null`
 - `email_editable` (optional): Allow user to change predefined email - `bool` - default `true`
 - `delivery_address` (optional): Owner of the domain - `string` - default `null`
+- `hide_confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
 
 #### Buy IOVs
 
@@ -116,6 +118,7 @@ new Swap.Widget({
 - `amount_currency` (optional): `IOV` or `EUR`  - `string` - default `EUR`
 - `amount_editable` (optional): Allow user to modify amount - `bool` - default `true`
 - `delivery_address` (optional): Address to send ordered coins - `string` - default `null`
+- `hide_confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
 
 ## Buttons
 
@@ -131,6 +134,7 @@ Pay button with simple configuration
 - `svt-order-type` (optional): `buy` | `sell` - `string` - default `buy`
 - `svt-delivery-address` (optional): Address to send ordered coins - `string` - default `null`
 - `svt-payment-type` (optional): Payment type of widget (`merchant` / `exchange` / `iov` ) - `string` - default `null`
+- `svt-hide-confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
 
 ##### Example 
 
@@ -193,10 +197,10 @@ const opts = {
     .on('close', () => {
       // user has closed widget
     })
-    .on('success', () => {
+    .on('success', (quote) => {
       // user has successfully paid
     })
-    .on('failure', () => {
+    .on('failure', (quote) => {
       // payment failure
     })
 ```
