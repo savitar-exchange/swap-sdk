@@ -50,6 +50,7 @@ export class Widget {
         this.buttonId = options.buttonId
         this.payButtons = options.payButtons
         this.popup
+        this.ready = false
 
 		this.injectStyle()
 
@@ -84,7 +85,15 @@ export class Widget {
             case 'close':
                 this.onExit = callback
             break
+            case 'failure':
+                this.onFailure = callback
+            break
 
+            case 'success':
+                this.onSuccess = callback
+            break
+
+    
             default:
                 throw new SwapWidgetError('"'+type+'" event do not exists');
 
@@ -158,6 +167,7 @@ export class Widget {
 		if (this.config?.payment_type) src = `${src}&payment_type=${this.config.payment_type}`
 		if (this.config?.order_type) src = `${src}&order_type=${this.config.order_type}`
 		if (this.config?.broker_address) src = `${src}&broker_address=${this.config.broker_address}`
+		if (this.config?.hide_confirm) src = `${src}&hide_confirm=${this.config.hide_confirm}`
 
 
         // Fixes dual-screen position                             Most browsers      Firefox
@@ -179,8 +189,12 @@ export class Widget {
             left=${left}
         `
 
-        this.popup = window.open(src, 'Savitar Swap', opts)
-        if (window.focus) this.popup.focus()
+        let popup = window.open(src, 'Savitar Swap', opts)
+        // window.addEventListener("beforeunload", function(event) { 
+        //     event.preventDefault()
+        //     console.log('close window')
+        // })
+        if (window.focus) popup.focus()
     }
     initIframe() {
         let src = `${this.base_url}?type=${this.widgetType}`
@@ -196,7 +210,8 @@ export class Widget {
 		if (this.config?.payment_type) src = `${src}&payment_type=${this.config.payment_type}`
 		if (this.config?.order_type) src = `${src}&order_type=${this.config.order_type}`
 		if (this.config?.broker_address) src = `${src}&broker_address=${this.config.broker_address}`
-        
+        if (this.config?.hide_confirm) src = `${src}&hide_confirm=${this.config.hide_confirm}`
+
 		this.iframe.setAttribute('src', src)
 		this.iframe.setAttribute('id', this.iframeContainerClass)
 		this.iframe.setAttribute('allowtransparency', 'true')
@@ -311,6 +326,7 @@ export class Widget {
                 if(payment_type) this.config.payment_type = payment_type
                 if(order_type) this.config.order_type = order_type
                 if(broker_address) this.config.broker_address = broker_address
+                if(hide_confirm) this.config.hide_confirm = hide_confirm
 
                 self.openPopup()
             }
@@ -321,7 +337,16 @@ export class Widget {
 
         switch(e.data.action){
             case 'ready':
-                if (typeof self.onReady === 'function') self.onReady()
+                if (typeof self.onReady === 'function' && !this.ready) {
+                    self.onReady()
+                    this.ready = true
+                }
+            break
+            case 'success':
+                if (typeof self.onSuccess === 'function') self.onSuccess(e.data.data)
+            break
+            case 'failure':
+                if (typeof self.onFailure === 'function') self.onFailure(e.data.data)
             break
             case 'close':
                 if (self.widgetType === 'modal') {
@@ -353,6 +378,7 @@ export class Widget {
         
 		this.widgetStarted = false
         document.body.appendChild(this.iframe)
+        this.ready = false
     }
     checkIframeCookie(callback) {
         const receiveMessage = (event) => {
