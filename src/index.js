@@ -206,7 +206,7 @@ export class Widget {
 		return this.iframe
     }  
     _noCookiesDisclaimer(id, container) {
-        document.addEventListener('click', e => this.noCookiesEvents(this, e))
+        document.addEventListener('click', e => this.noCookiesEvents(e))
 
         this.injectNoCookiesStyle(id)
         let titleSpan = document.createElement('span')
@@ -275,12 +275,13 @@ export class Widget {
     closeButtonsEvents(){
         document.removeEventListener('click', e => this.buttonsEvents(this, e))
     }
-    noCookiesEvents(self, event) {
+    noCookiesEvents(event) {
         let element = event.target
         
-        if ( element.attributes.id.value === 'nocookies') {
-            this.openPopup()
-        }
+        if ( element.tagName !== 'BUTTON') return
+        if ( element.attributes.id.value !== 'nocookies') return
+
+        this.openPopup()
     }
     buttonsEvents(self, event) {
         let element = event.target
