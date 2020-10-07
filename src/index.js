@@ -1,12 +1,32 @@
 
 const DEFAULT_OPTS = {
     type: 'modal',
+    locale: 'fr',
     embedContainerId: 'swap-embed',
     iframeContainerClass: 'swap-widget-container',
     buttonId: 'swap-init',
     payButtons: false,
     payButtonsStyle: true,
     config: {}
+}
+
+const LOCALES = {
+    fr: {
+        'cookies_not_enabled': 'Les cookies ne sont pas activés, pour continuer veuillez cliquer sur le bouton ci-dessous',
+        'continue': 'Continuer',
+        'buy': 'Acheter',
+        'payer': 'Payer',
+        'in': 'en',
+        'pay_now': 'Acheter maintenant avec Swap'
+    },
+    en: {
+        'cookies_not_enabled': 'Cookies are not enabled, to continue click on the button below',
+        'continue': 'Continue',
+        'buy': 'Buy',
+        'pay': 'Pay',
+        'in': 'in',
+        'pay_now':'Pay now with Swap'
+    }
 }
 
 export class Widget {
@@ -23,6 +43,7 @@ export class Widget {
         this.widgetStarted = false
 
         this.widgetType = options.type
+        this.locale = options.locale
         this.iframe = document.createElement('iframe')
         this.iframeContainerClass = options.iframeContainerClass
         this.embedContainerId = options.embedContainerId
@@ -82,6 +103,12 @@ export class Widget {
 		let styleSheet = document.createElement('style')
 		styleSheet.type = 'text/css'
 		styleSheet.innerText = buttonStyle
+        document.head.appendChild(styleSheet)
+    }
+    injectNoCookiesStyle(id) {
+		let styleSheet = document.createElement('style')
+		styleSheet.type = 'text/css'
+		styleSheet.innerText = noCookiesStyle(id)
         document.head.appendChild(styleSheet)
     }
 //Modal
@@ -177,16 +204,44 @@ export class Widget {
         this.iframe.setAttribute('resize', 'none')
         
 		return this.iframe
+    }  
+    _noCookiesDisclaimer(id, container) {
+        document.addEventListener('click', e => this.noCookiesEvents(this, e))
+
+        this.injectNoCookiesStyle(id)
+        let titleSpan = document.createElement('span')
+        let title = document.createTextNode(LOCALES[this.locale].cookies_not_enabled)
+        titleSpan.appendChild(title)
+
+
+        let buttonContainer = document.createElement('div')
+        let button = document.createElement('button')
+        button.innerHTML = LOCALES[this.locale].continue
+        button.className = 'swap-open'
+        button.id = 'nocookies'
+
+        buttonContainer.appendChild(button)
+
+
+
+        container.appendChild(titleSpan)
+        container.appendChild(buttonContainer)
+        
 	}  
 	initEmbed(id) {
-		this.iframe = this.initIframe()
         let embedContainer = document.getElementById(id)
-        
+            
         if (embedContainer === null) throw new SwapWidgetError('#'+id+' container not found')
 
-        this.widgetStarted = true
-        this.iframe.setAttribute('class', this.iframeContainerClass)
-        embedContainer.appendChild(this.iframe)
+        this.checkIframeCookie(status => {
+            if(!status) return this._noCookiesDisclaimer(id, embedContainer)
+            this.iframe = this.initIframe()
+  
+            this.widgetStarted = true
+            this.iframe.setAttribute('class', this.iframeContainerClass)
+            embedContainer.appendChild(this.iframe)
+        })
+
 	}
 // Buttons
     initButtons(){
@@ -204,22 +259,28 @@ export class Widget {
 
                 let text
                 
-
-                text = payment_type === 'merchant' ? 'Pay ' : 'Buy '
+                text = payment_type === 'merchant' ? LOCALES[this.locale].pay+' ' : LOCALES[this.locale].buy+' '
                 text = order_type === 'sell' ? 'Sell ' : text
 
                 const currencyUnit = amount_currency === 'eur' ? '€' : currency.toUpperCase()
                 if(amount) text += amount+' '+currencyUnit+' '
 
                 const amountUnit = amount_currency !== 'eur' ? 'EUR' : currency.toUpperCase()
-                if(currency) text += (amount ? 'in ' : '')+amountUnit
+                if(currency) text += (amount ? LOCALES[this.locale].in+' ' : '')+amountUnit
 
-                e.textContent = text ? text : 'Pay now with Swap'
+                e.textContent = text ? text : LOCALES[this.locale].pay_now
             }
         })
     }
     closeButtonsEvents(){
         document.removeEventListener('click', e => this.buttonsEvents(this, e))
+    }
+    noCookiesEvents(self, event) {
+        let element = event.target
+        
+        if ( element.attributes.id.value === 'nocookies') {
+            this.openPopup()
+        }
     }
     buttonsEvents(self, event) {
         let element = event.target
@@ -284,8 +345,6 @@ export class Widget {
     closeEvents() {
         window.removeEventListener('message', e => this.callbacksListeners(this, e))
     }
-
-
 	resetFrame() {
         this.config = {...this.default_config}
 		this.iframe.setAttribute('src', '#')
@@ -315,6 +374,9 @@ export class Widget {
         ifrm.style.height = "1px"
 
         document.body.appendChild(ifrm)
+    }
+    setLocale(locale){
+        this.locale = locale
     }
 }
 
@@ -416,6 +478,20 @@ const buttonStyle = `
 
 `
 
+const noCookiesStyle = (id) => {
+    return  `   
+    #${id} {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    #${id} > span {
+        color: red;
+    } 
+
+`
+}
 class SwapWidgetError extends Error {
     constructor(...params) {
       super(...params)
