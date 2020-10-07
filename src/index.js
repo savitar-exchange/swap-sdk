@@ -1,43 +1,6 @@
-// ### Center popup multi-display
-function FindLeftScreenBoundry()
-{
-    // Check if the window is off the primary monitor in a positive axis
-    // X,Y                  X,Y                    S = Screen, W = Window
-    // 0,0  ----------   1280,0  ----------
-    //     |          |         |  ---     |
-    //     |          |         | | W |    |
-    //     |        S |         |  ---   S |
-    //      ----------           ----------
-    if (window.leftWindowBoundry() > window.screen.width)
-    {
-        return window.leftWindowBoundry() - (window.leftWindowBoundry() - window.screen.width);
-    }
-
-    // Check if the window is off the primary monitor in a negative axis
-    // X,Y                  X,Y                    S = Screen, W = Window
-    // 0,0  ----------  -1280,0  ----------
-    //     |          |         |  ---     |
-    //     |          |         | | W |    |
-    //     |        S |         |  ---   S |
-    //      ----------           ----------
-    // This only works in Firefox at the moment due to a bug in Internet Explorer opening new windows into a negative axis
-    // However, you can move opened windows into a negative axis as a workaround
-    if (window.leftWindowBoundry() < 0 && window.leftWindowBoundry() > (window.screen.width * -1))
-    {
-        return (window.screen.width * -1);
-    }
-
-    // If neither of the above, the monitor is on the primary monitor whose's screen X should be 0
-    return 0;
-}
-
-window.leftScreenBoundry = FindLeftScreenBoundry;
-// ### https://stackoverflow.com/questions/16363474/window-open-on-a-multi-monitor-dual-monitor-system-where-does-window-pop-up
-
 
 const DEFAULT_OPTS = {
     type: 'modal',
-    mode: 'production',
     embedContainerId: 'swap-embed',
     iframeContainerClass: 'swap-widget-container',
     buttonId: 'swap-init',
@@ -45,6 +8,7 @@ const DEFAULT_OPTS = {
     payButtonsStyle: true,
     config: {}
 }
+
 export class Widget {
 	constructor(options = DEFAULT_OPTS) {
         options = {
@@ -52,7 +16,7 @@ export class Widget {
             ...options
         }
 
-		this.base_url = 'https://swap.savitar.io/widget';
+		this.base_url = process.env.SWAP_URL+'/widget';
 
         this.config = {...options.config}
         this.default_config = {...options.config}
@@ -69,10 +33,6 @@ export class Widget {
 		this.injectStyle()
 
         if(options.payButtons && options.payButtonsStyle) this.injectButtonStyle()
-
-		if (options.mode === 'sandbox') {
-            this.base_url = 'http://localhost:3000/widget';
-		}
 
 		if (options.type === 'modal' || options.type === 'embed') {
 			this.widgetType = options.type
@@ -193,13 +153,6 @@ export class Widget {
         `
         this.popup = window.open(src, 'Savitar Swap', opts)
         if (window.focus) this.popup.focus()
-
-        this.popup.addEventListener("beforeunload", function(event) {
-            console.log("UNLOAD:1");
-            //event.preventDefault();
-            //event.returnValue = null; //"Any text"; //true; //false;
-            //return null; //"Any text"; //true; //false;
-          });
     }
     initIframe() {
         let src = `${this.base_url}?type=${this.widgetType}`
@@ -319,9 +272,6 @@ export class Widget {
             break
 
             case 'exited':
-                // console.log('kyc exited')
-                // window.frames.postMessage({action: 'exited'}, '*')
-                // window.parent.postMessage({action: 'exited'}, '*')
             break
 
             default:
@@ -346,8 +296,7 @@ export class Widget {
     }
     checkIframeCookie(callback) {
         const receiveMessage = (event) => {
-        console.log('receivedMessage', event)
-          if (event.origin !== "http://exchange.savitar.devel" && event.origin !== "https://exchange.savitar.io") return
+          if (event.origin !== process.env.API_HOST) return
           if (event.data === "iframecookie=true") {
             callback(true)
             ifrm.remove()
@@ -360,7 +309,7 @@ export class Widget {
 
         window.addEventListener("message", receiveMessage, false)
         const ifrm = document.createElement('iframe')
-        ifrm.setAttribute("src", "http://exchange.savitar.devel/api/v0/checkcookie")
+        ifrm.setAttribute("src", process.env.API_URL+"/checkcookie")
         ifrm.setAttribute("frameBorder", "0")
         ifrm.style.width = "1px"
         ifrm.style.height = "1px"
