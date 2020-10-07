@@ -1,8 +1,7 @@
-  
 
 const DEFAULT_OPTS = {
     type: 'modal',
-    mode: 'production',
+    locale: 'fr',
     embedContainerId: 'swap-embed',
     iframeContainerClass: 'swap-widget-container',
     buttonId: 'swap-init',
@@ -10,6 +9,26 @@ const DEFAULT_OPTS = {
     payButtonsStyle: true,
     config: {}
 }
+
+const LOCALES = {
+    fr: {
+        'cookies_not_enabled': 'Les cookies ne sont pas activés, pour continuer veuillez cliquer sur le bouton ci-dessous',
+        'continue': 'Continuer',
+        'buy': 'Acheter',
+        'payer': 'Payer',
+        'in': 'en',
+        'pay_now': 'Acheter maintenant avec Swap'
+    },
+    en: {
+        'cookies_not_enabled': 'Cookies are not enabled, to continue click on the button below',
+        'continue': 'Continue',
+        'buy': 'Buy',
+        'pay': 'Pay',
+        'in': 'in',
+        'pay_now':'Pay now with Swap'
+    }
+}
+
 export class Widget {
 	constructor(options = DEFAULT_OPTS) {
         options = {
@@ -17,26 +36,24 @@ export class Widget {
             ...options
         }
 
-		this.base_url = 'https://swap.savitar.io/widget';
+		this.base_url = process.env.SWAP_URL+'/widget';
 
         this.config = {...options.config}
         this.default_config = {...options.config}
         this.widgetStarted = false
 
         this.widgetType = options.type
-		this.iframe = document.createElement('iframe')
+        this.locale = options.locale
+        this.iframe = document.createElement('iframe')
         this.iframeContainerClass = options.iframeContainerClass
         this.embedContainerId = options.embedContainerId
         this.buttonId = options.buttonId
         this.payButtons = options.payButtons
+        this.popup
 
 		this.injectStyle()
 
         if(options.payButtons && options.payButtonsStyle) this.injectButtonStyle()
-
-		if (options.mode === 'sandbox') {
-            this.base_url = 'http://localhost:3000/widget';
-		}
 
 		if (options.type === 'modal' || options.type === 'embed') {
 			this.widgetType = options.type
@@ -88,6 +105,12 @@ export class Widget {
 		styleSheet.innerText = buttonStyle
         document.head.appendChild(styleSheet)
     }
+    injectNoCookiesStyle(id) {
+		let styleSheet = document.createElement('style')
+		styleSheet.type = 'text/css'
+		styleSheet.innerText = noCookiesStyle(id)
+        document.head.appendChild(styleSheet)
+    }
 //Modal
 	initModal() {
 		document.addEventListener('click', e => this.modalEvents(this, e))
@@ -101,9 +124,11 @@ export class Widget {
         if ( (element.tagName === 'BUTTON' || element.tagName === 'SPAN')
         && element.attributes.id ) {
 
-            if (element.attributes.id.value === this.buttonId 
+            if (element.attributes.id.value === self.buttonId 
                 && !self.widgetStarted) {
-                    self.openModal()
+                    self.checkIframeCookie((status) => {
+                        return status ? self.openModal() : self.openPopup()
+                    })
             }
         }
     }
@@ -115,6 +140,47 @@ export class Widget {
 
         this.widgetStarted = true
 		document.body.appendChild(this.iframe)
+    }
+    openPopup(){
+        const popupWidth = 400
+        const popupHeight = 550
+
+        let src = `${this.base_url}?type=${this.widgetType}`
+        
+		if (this.config?.email) src = `${src}&email=${this.config.email}`
+        src = `${src}&email_editable=${this.config?.email_editable || 'true'}`
+        
+		if (this.config?.currency) src = `${src}&currency=${this.config.currency}`
+		if (this.config?.amount) src = `${src}&amount=${this.config.amount}`
+		if (this.config?.amount_currency) src = `${src}&amount_currency=${this.config.amount_currency}`
+		src = `${src}&amount_editable=${this.config?.amount_editable || 'true'}`
+		if (this.config?.delivery_address) src = `${src}&delivery_address=${this.config.delivery_address}`
+		if (this.config?.payment_type) src = `${src}&payment_type=${this.config.payment_type}`
+		if (this.config?.order_type) src = `${src}&order_type=${this.config.order_type}`
+		if (this.config?.broker_address) src = `${src}&broker_address=${this.config.broker_address}`
+
+
+        // Fixes dual-screen position                             Most browsers      Firefox
+        const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
+        const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
+
+        const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width
+        const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height
+
+        const systemZoom = width / window.screen.availWidth
+        const left = (width - popupWidth) / 2 / systemZoom + dualScreenLeft
+        const top = (height - popupHeight) / 2 / systemZoom + dualScreenTop
+
+        const opts = `
+            directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,
+            width=${popupWidth / systemZoom}, 
+            height=${popupHeight / systemZoom}, 
+            top=${top}, 
+            left=${left}
+        `
+
+        this.popup = window.open(src, 'Savitar Swap', opts)
+        if (window.focus) this.popup.focus()
     }
     initIframe() {
         let src = `${this.base_url}?type=${this.widgetType}`
@@ -139,16 +205,43 @@ export class Widget {
         this.iframe.setAttribute('resize', 'none')
         
 		return this.iframe
+    }  
+    _noCookiesDisclaimer(id, container) {
+        const rand = Math.round(Math.random()*100)
+        document.addEventListener('click', e => this.noCookiesEvents(this, e, rand))
+
+        this.injectNoCookiesStyle(id)
+        let titleSpan = document.createElement('span')
+        let title = document.createTextNode(LOCALES[this.locale].cookies_not_enabled)
+        titleSpan.appendChild(title)
+
+
+        let buttonContainer = document.createElement('div')
+        let button = document.createElement('button')
+        button.innerHTML = LOCALES[this.locale].continue
+        button.className = 'swap-open'
+
+        button.id = 'nocookies-'+rand
+
+        buttonContainer.appendChild(button)
+
+        container.appendChild(titleSpan)
+        container.appendChild(buttonContainer)
 	}  
 	initEmbed(id) {
-		this.iframe = this.initIframe()
         let embedContainer = document.getElementById(id)
-        
+            
         if (embedContainer === null) throw new SwapWidgetError('#'+id+' container not found')
 
-        this.widgetStarted = true
-        this.iframe.setAttribute('class', this.iframeContainerClass)
-        embedContainer.appendChild(this.iframe)
+        this.checkIframeCookie(status => {
+            if(!status) return this._noCookiesDisclaimer(id, embedContainer)
+            this.iframe = this.initIframe()
+  
+            this.widgetStarted = true
+            this.iframe.setAttribute('class', this.iframeContainerClass)
+            embedContainer.appendChild(this.iframe)
+        })
+
 	}
 // Buttons
     initButtons(){
@@ -166,22 +259,29 @@ export class Widget {
 
                 let text
                 
-
-                text = payment_type === 'merchant' ? 'Pay ' : 'Buy '
+                text = payment_type === 'merchant' ? LOCALES[this.locale].pay+' ' : LOCALES[this.locale].buy+' '
                 text = order_type === 'sell' ? 'Sell ' : text
 
                 const currencyUnit = amount_currency === 'eur' ? '€' : currency.toUpperCase()
                 if(amount) text += amount+' '+currencyUnit+' '
 
                 const amountUnit = amount_currency !== 'eur' ? 'EUR' : currency.toUpperCase()
-                if(currency) text += (amount ? 'in ' : '')+amountUnit
+                if(currency) text += (amount ? LOCALES[this.locale].in+' ' : '')+amountUnit
 
-                e.textContent = text ? text : 'Pay now with Swap'
+                e.textContent = text ? text : LOCALES[this.locale].pay_now
             }
         })
     }
     closeButtonsEvents(){
         document.removeEventListener('click', e => this.buttonsEvents(this, e))
+    }
+    noCookiesEvents(self, event, rand) {
+        let element = event.target
+        
+        if ( element.tagName !== 'BUTTON') return
+        if ( element.attributes.id.value !== 'nocookies-'+rand) return
+
+        self.openPopup()
     }
     buttonsEvents(self, event) {
         let element = event.target
@@ -212,7 +312,7 @@ export class Widget {
                 if(order_type) this.config.order_type = order_type
                 if(broker_address) this.config.broker_address = broker_address
 
-                self.openModal()
+                self.openPopup()
             }
         }
     }
@@ -234,9 +334,6 @@ export class Widget {
             break
 
             case 'exited':
-                // console.log('kyc exited')
-                // window.frames.postMessage({action: 'exited'}, '*')
-                // window.parent.postMessage({action: 'exited'}, '*')
             break
 
             default:
@@ -249,8 +346,6 @@ export class Widget {
     closeEvents() {
         window.removeEventListener('message', e => this.callbacksListeners(this, e))
     }
-
-
 	resetFrame() {
         this.config = {...this.default_config}
 		this.iframe.setAttribute('src', '#')
@@ -258,7 +353,32 @@ export class Widget {
         
 		this.widgetStarted = false
         document.body.appendChild(this.iframe)
-	}
+    }
+    checkIframeCookie(callback) {
+        const receiveMessage = (event) => {
+          if (event.origin !== process.env.API_HOST) return
+          if (event.data === "iframecookie=true") {
+            callback(true)
+            ifrm.remove()
+          } else if (event.data === "iframecookie=false") {
+            callback(false)
+            ifrm.remove()
+          }
+          window.removeEventListener("message", receiveMessage)
+        }
+
+        window.addEventListener("message", receiveMessage, false)
+        const ifrm = document.createElement('iframe')
+        ifrm.setAttribute("src", process.env.API_URL+"/checkcookie")
+        ifrm.setAttribute("frameBorder", "0")
+        ifrm.style.width = "1px"
+        ifrm.style.height = "1px"
+
+        document.body.appendChild(ifrm)
+    }
+    setLocale(locale){
+        this.locale = locale
+    }
 }
 
 let iframeStyle = `
@@ -290,7 +410,7 @@ const globalStyles = `
         display: inline-block;
         font-weight: 400;
         color: #ffffff;
-
+        width: 120px;
         text-align: center;
         vertical-align: middle;
         -webkit-user-select: none;
@@ -358,6 +478,19 @@ const buttonStyle = `
 
 `
 
+const noCookiesStyle = (id) => {
+    return  `   
+    #${id} {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    #${id} > span {
+    } 
+
+`
+}
 class SwapWidgetError extends Error {
     constructor(...params) {
       super(...params)
