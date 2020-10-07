@@ -178,6 +178,7 @@ export class Widget {
             top=${top}, 
             left=${left}
         `
+
         this.popup = window.open(src, 'Savitar Swap', opts)
         if (window.focus) this.popup.focus()
     }
@@ -206,7 +207,7 @@ export class Widget {
 		return this.iframe
     }  
     _noCookiesDisclaimer(id, container) {
-        document.addEventListener('click', e => this.noCookiesEvents(e))
+        document.addEventListener('click', e => this.noCookiesEvents(this, e))
 
         this.injectNoCookiesStyle(id)
         let titleSpan = document.createElement('span')
@@ -272,13 +273,13 @@ export class Widget {
     closeButtonsEvents(){
         document.removeEventListener('click', e => this.buttonsEvents(this, e))
     }
-    noCookiesEvents(event) {
+    noCookiesEvents(self, event) {
         let element = event.target
         
         if ( element.tagName !== 'BUTTON') return
         if ( element.attributes.id.value !== 'nocookies') return
 
-        this.openPopup()
+        self.openPopup()
     }
     buttonsEvents(self, event) {
         let element = event.target
