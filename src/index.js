@@ -207,7 +207,8 @@ export class Widget {
 		return this.iframe
     }  
     _noCookiesDisclaimer(id, container) {
-        document.addEventListener('click', e => this.noCookiesEvents(this, e))
+        const rand = Math.round(Math.random()*100)
+        document.addEventListener('click', e => this.noCookiesEvents(this, e, rand))
 
         this.injectNoCookiesStyle(id)
         let titleSpan = document.createElement('span')
@@ -219,7 +220,8 @@ export class Widget {
         let button = document.createElement('button')
         button.innerHTML = LOCALES[this.locale].continue
         button.className = 'swap-open'
-        button.id = 'nocookies'
+
+        button.id = 'nocookies-'+rand
 
         buttonContainer.appendChild(button)
 
@@ -273,11 +275,11 @@ export class Widget {
     closeButtonsEvents(){
         document.removeEventListener('click', e => this.buttonsEvents(this, e))
     }
-    noCookiesEvents(self, event) {
+    noCookiesEvents(self, event, rand) {
         let element = event.target
         
         if ( element.tagName !== 'BUTTON') return
-        if ( element.attributes.id.value !== 'nocookies') return
+        if ( element.attributes.id.value !== 'nocookies-'+rand) return
 
         self.openPopup()
     }

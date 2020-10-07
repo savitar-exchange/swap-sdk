@@ -361,8 +361,9 @@ var Widget = /*#__PURE__*/function () {
     value: function _noCookiesDisclaimer(id, container) {
       var _this3 = this;
 
+      var rand = Math.round(Math.random() * 100);
       document.addEventListener('click', function (e) {
-        return _this3.noCookiesEvents(_this3, e);
+        return _this3.noCookiesEvents(_this3, e, rand);
       });
       this.injectNoCookiesStyle(id);
       var titleSpan = document.createElement('span');
@@ -372,7 +373,7 @@ var Widget = /*#__PURE__*/function () {
       var button = document.createElement('button');
       button.innerHTML = LOCALES[this.locale]["continue"];
       button.className = 'swap-open';
-      button.id = 'nocookies';
+      button.id = 'nocookies-' + rand;
       buttonContainer.appendChild(button);
       container.appendChild(titleSpan);
       container.appendChild(buttonContainer);
@@ -433,10 +434,10 @@ var Widget = /*#__PURE__*/function () {
     }
   }, {
     key: "noCookiesEvents",
-    value: function noCookiesEvents(self, event) {
+    value: function noCookiesEvents(self, event, rand) {
       var element = event.target;
       if (element.tagName !== 'BUTTON') return;
-      if (element.attributes.id.value !== 'nocookies') return;
+      if (element.attributes.id.value !== 'nocookies-' + rand) return;
       self.openPopup();
     }
   }, {
