@@ -45,7 +45,8 @@ var Swap = require('swap-sdk');
 import * as Swap from 'swap-sdk';
 
 new Swap.Widget({
-    type: 'modal'
+    type: 'modal',
+    lang: 'en', // default langage - string - ['en', 'fr']
 }).init()
 ```
 
