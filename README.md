@@ -107,6 +107,7 @@ new Swap.Widget({
 - `email` (optional): User email - `string` - default `null`
 - `email_editable` (optional): Allow user to change predefined email - `bool` - default `true`
 - `delivery_address` (optional): Owner of the domain - `string` - default `null`
+- `broker_address` (optional): Register commission address - `string` - default `null`
 - `hide_confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
 
 #### Buy IOVs
