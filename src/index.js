@@ -1,7 +1,7 @@
 
 const DEFAULT_OPTS = {
     type: 'modal',
-    locale: 'fr',
+    lang: 'fr',
     embedContainerId: 'swap-embed',
     iframeContainerClass: 'swap-widget-container',
     buttonId: 'swap-init',
@@ -10,24 +10,7 @@ const DEFAULT_OPTS = {
     config: {}
 }
 
-const LOCALES = {
-    fr: {
-        'cookies_not_enabled': 'Les cookies ne sont pas activés, pour continuer veuillez cliquer sur le bouton ci-dessous',
-        'continue': 'Continuer',
-        'buy': 'Acheter',
-        'payer': 'Payer',
-        'in': 'en',
-        'pay_now': 'Acheter maintenant avec Swap'
-    },
-    en: {
-        'cookies_not_enabled': 'Cookies are not enabled, to continue click on the button below',
-        'continue': 'Continue',
-        'buy': 'Buy',
-        'pay': 'Pay',
-        'in': 'in',
-        'pay_now':'Pay now with Swap'
-    }
-}
+import LOCALES from './locales.js'
 
 export class Widget {
 	constructor(options = DEFAULT_OPTS) {
@@ -43,7 +26,7 @@ export class Widget {
         this.widgetStarted = false
 
         this.widgetType = options.type
-        this.locale = options.locale
+        this.lang = options.lang
         this.iframe = document.createElement('iframe')
         this.iframeContainerClass = options.iframeContainerClass
         this.embedContainerId = options.embedContainerId
@@ -67,7 +50,6 @@ export class Widget {
 
     init() {
 		this.setupEvents()
-        
         if (this.widgetType === 'embed' 
             && this.embedContainerId !== '') this.initEmbed(this.embedContainerId)
 
@@ -168,6 +150,7 @@ export class Widget {
 		if (this.config?.order_type) src = `${src}&order_type=${this.config.order_type}`
 		if (this.config?.broker_address) src = `${src}&broker_address=${this.config.broker_address}`
 		if (this.config?.hide_confirm) src = `${src}&hide_confirm=${this.config.hide_confirm}`
+		src = `${src}&lang=${this.lang}`
 
 
         // Fixes dual-screen position                             Most browsers      Firefox
@@ -211,6 +194,7 @@ export class Widget {
 		if (this.config?.order_type) src = `${src}&order_type=${this.config.order_type}`
 		if (this.config?.broker_address) src = `${src}&broker_address=${this.config.broker_address}`
         if (this.config?.hide_confirm) src = `${src}&hide_confirm=${this.config.hide_confirm}`
+		src = `${src}&lang=${this.lang}`
 
 		this.iframe.setAttribute('src', src)
 		this.iframe.setAttribute('id', this.iframeContainerClass)
@@ -227,13 +211,13 @@ export class Widget {
 
         this.injectNoCookiesStyle(id)
         let titleSpan = document.createElement('span')
-        let title = document.createTextNode(LOCALES[this.locale].cookies_not_enabled)
+        let title = document.createTextNode(LOCALES[this.lang].cookies_not_enabled)
         titleSpan.appendChild(title)
 
 
         let buttonContainer = document.createElement('div')
         let button = document.createElement('button')
-        button.innerHTML = LOCALES[this.locale].continue
+        button.innerHTML = LOCALES[this.lang].continue
         button.className = 'swap-open'
 
         button.id = 'nocookies-'+rand
@@ -247,11 +231,10 @@ export class Widget {
         let embedContainer = document.getElementById(id)
             
         if (embedContainer === null) throw new SwapWidgetError('#'+id+' container not found')
-
         this.checkIframeCookie(status => {
             if(!status) return this._noCookiesDisclaimer(id, embedContainer)
             this.iframe = this.initIframe()
-  
+
             this.widgetStarted = true
             this.iframe.setAttribute('class', this.iframeContainerClass)
             embedContainer.appendChild(this.iframe)
@@ -274,16 +257,16 @@ export class Widget {
 
                 let text
                 
-                text = payment_type === 'merchant' ? LOCALES[this.locale].pay+' ' : LOCALES[this.locale].buy+' '
+                text = payment_type === 'merchant' ? LOCALES[this.lang].pay+' ' : LOCALES[this.lang].buy+' '
                 text = order_type === 'sell' ? 'Sell ' : text
 
                 const currencyUnit = amount_currency === 'eur' ? '€' : currency.toUpperCase()
                 if(amount) text += amount+' '+currencyUnit+' '
 
                 const amountUnit = amount_currency !== 'eur' ? 'EUR' : currency.toUpperCase()
-                if(currency) text += (amount ? LOCALES[this.locale].in+' ' : '')+amountUnit
+                if(currency) text += (amount ? LOCALES[this.lang].in+' ' : '')+amountUnit
 
-                e.textContent = text ? text : LOCALES[this.locale].pay_now
+                e.textContent = text ? text : LOCALES[this.lang].pay_now
             }
         })
     }
@@ -381,6 +364,7 @@ export class Widget {
         this.ready = false
     }
     checkIframeCookie(callback) {
+
         const receiveMessage = (event) => {
           if (event.origin !== process.env.API_HOST) return
           if (event.data === "iframecookie=true") {
@@ -402,8 +386,8 @@ export class Widget {
 
         document.body.appendChild(ifrm)
     }
-    setLocale(locale){
-        this.locale = locale
+    setLang(lang){
+        this.lang = lang
     }
 }
 
