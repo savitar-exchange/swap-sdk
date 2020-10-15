@@ -1,5 +1,5 @@
 {
-  "name": "swap-sdk",
+  "name": "@savitar.exchange/swap-sdk",
   "version": "1.0.7",
   "description": "Savitar Swap SDK",
   "homepage": "https://github.com/savitar-exchange/swap-sdk#readme",
