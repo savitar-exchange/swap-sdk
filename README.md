@@ -29,11 +29,11 @@ For direct API connection, please see [https://doc.savitar.io/api/](https://doc.
 ## Install
 ### NPM
 
-`npm install --save https://github.com/savitar-exchange/swap-sdk.git` 
+`npm install --save @savitar.exchange/swap-sdk` 
 
 or 
 
-`yarn add https://github.com/savitar-exchange/swap-sdk.git`
+`yarn add @savitar.exchange/swap-sdk`
 
 ## Quick Start
 
