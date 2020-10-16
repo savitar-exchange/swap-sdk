@@ -35,6 +35,11 @@ or
 
 `yarn add @savitar.exchange/swap-sdk`
 
+or 
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@savitar.exchange/swap-sdk/dist/bundle.min.js"></script>
+```
 ## Quick Start
 
 ### Initialize the client
