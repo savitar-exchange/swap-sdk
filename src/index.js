@@ -96,12 +96,6 @@ export class Widget {
 		styleSheet.innerText = buttonStyle
         document.head.appendChild(styleSheet)
     }
-    injectNoCookiesStyle(id) {
-		let styleSheet = document.createElement('style')
-		styleSheet.type = 'text/css'
-		styleSheet.innerText = noCookiesStyle(id)
-        document.head.appendChild(styleSheet)
-    }
 //Modal
 	initModal() {
 		document.addEventListener('click', e => this.modalEvents(this, e))
@@ -209,7 +203,9 @@ export class Widget {
         const rand = Math.round(Math.random()*100)
         document.addEventListener('click', e => this.noCookiesEvents(this, e, rand))
 
-        this.injectNoCookiesStyle(id)
+        let content = document.createElement('div')
+        content.className = 'text-center'
+
         let titleSpan = document.createElement('span')
         let title = document.createTextNode(LOCALES[this.lang].cookies_not_enabled)
         titleSpan.appendChild(title)
@@ -224,8 +220,10 @@ export class Widget {
 
         buttonContainer.appendChild(button)
 
-        container.appendChild(titleSpan)
-        container.appendChild(buttonContainer)
+        content.appendChild(titleSpan)
+        content.appendChild(buttonContainer)
+
+        container.appendChild(content)
 	}  
 	initEmbed(id) {
         let embedContainer = document.getElementById(id)
@@ -441,7 +439,6 @@ const globalStyles = `
     }
 
     .swap-widget-container {
-        min-width: 540px;
         width: 100%;
         min-height: 480px;
         border-color: transparent;
@@ -487,20 +484,6 @@ const buttonStyle = `
     }
 
 `
-
-const noCookiesStyle = (id) => {
-    return  `   
-    #${id} {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    #${id} > span {
-    } 
-
-`
-}
 class SwapWidgetError extends Error {
     constructor(...params) {
       super(...params)
