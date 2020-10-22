@@ -102,7 +102,7 @@ new Swap.Widget({
 - `amount` (optional): Amount of the order  - `float`- default `25`
 - `amount_currency` (optional): Currency of amount  - `string` - default `eur`
 - `amount_editable` (optional): Allow user to modify amount - `bool` - default `true`
-- `delivery_address` (optional): Address to send ordered coins - `string`- default `null`
+- `delivery_address` (optional): Address to send ordered coins - `string` - default `null`
 - `hide_confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
 
 ### IOV
@@ -115,6 +115,7 @@ new Swap.Widget({
 - `delivery_address` (optional): Owner of the domain - `string` - default `null`
 - `broker_address` (optional): Register commission address - `string` - default `null`
 - `hide_confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
+- `iov_domain` (optional): Set default Starname domain - `string` - default `null`
 
 #### Buy IOVs
 
@@ -142,6 +143,8 @@ Pay button with simple configuration
 - `svt-delivery-address` (optional): Address to send ordered coins - `string` - default `null`
 - `svt-payment-type` (optional): Payment type of widget (`merchant` / `exchange` / `iov` ) - `string` - default `null`
 - `svt-hide-confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
+- `svt-iov-domain` (optional): Set default Starname domain - `string` - default `null`
+
 
 ##### Example 
 
@@ -204,10 +207,10 @@ const opts = {
     .on('close', () => {
       // user has closed widget
     })
-    .on('success', (quote) => {
+    .on('success', (data) => {
       // user has successfully paid
     })
-    .on('failure', (quote) => {
+    .on('failure', (data) => {
       // payment failure
     })
 ```

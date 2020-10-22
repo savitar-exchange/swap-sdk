@@ -143,7 +143,9 @@ export class Widget {
 		if (this.config?.payment_type) src = `${src}&payment_type=${this.config.payment_type}`
 		if (this.config?.order_type) src = `${src}&order_type=${this.config.order_type}`
 		if (this.config?.broker_address) src = `${src}&broker_address=${this.config.broker_address}`
-		if (this.config?.hide_confirm) src = `${src}&hide_confirm=${this.config.hide_confirm}`
+        if (this.config?.hide_confirm) src = `${src}&hide_confirm=${this.config.hide_confirm}`
+        if (this.config?.iov_domain) src = `${src}&iov_domain=${this.config.iov_domain}`
+
 		src = `${src}&lang=${this.lang}`
 
 
@@ -188,6 +190,8 @@ export class Widget {
 		if (this.config?.order_type) src = `${src}&order_type=${this.config.order_type}`
 		if (this.config?.broker_address) src = `${src}&broker_address=${this.config.broker_address}`
         if (this.config?.hide_confirm) src = `${src}&hide_confirm=${this.config.hide_confirm}`
+        if (this.config?.iov_domain) src = `${src}&iov_domain=${this.config.iov_domain}`
+
 		src = `${src}&lang=${this.lang}`
 
 		this.iframe.setAttribute('src', src)
@@ -295,6 +299,7 @@ export class Widget {
             const payment_type = element.getAttribute('svt-payment-type')
             const order_type = element.getAttribute('svt-order-type')
             const broker_address = element.getAttribute('svt-broker-address')
+            const iov_domain = element.getAttribute('svt-iov-domain')
 
             if (!self.widgetStarted) {
                 if(amount) this.config.amount = amount
@@ -308,6 +313,7 @@ export class Widget {
                 if(order_type) this.config.order_type = order_type
                 if(broker_address) this.config.broker_address = broker_address
                 if(hide_confirm) this.config.hide_confirm = hide_confirm
+                if(iov_domain) this.config.iov_domain = iov_domain
 
                 self.openPopup()
             }
