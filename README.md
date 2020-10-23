@@ -117,6 +117,7 @@ new Swap.Widget({
 - `broker_address` (optional): Register commission address - `string` - default `null`
 - `hide_confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
 - `iov_domain` (optional): Set default Starname domain - `string` - default `null`
+- `ref_code` (optional): Referral ID for comissions - `string` - default `null`
 
 #### Buy IOVs
 
