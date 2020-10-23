@@ -104,6 +104,7 @@ new Swap.Widget({
 - `amount_editable` (optional): Allow user to modify amount - `bool` - default `true`
 - `delivery_address` (optional): Address to send ordered coins - `string` - default `null`
 - `hide_confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
+- `ref_code` (optional): Referral ID for comissions - `string` - default `null`
 
 ### IOV
 
@@ -127,6 +128,7 @@ new Swap.Widget({
 - `amount_editable` (optional): Allow user to modify amount - `bool` - default `true`
 - `delivery_address` (optional): Address to send ordered coins - `string` - default `null`
 - `hide_confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
+- `ref_code` (optional): Referral ID for comissions - `string` - default `null`
 
 ## Buttons
 
@@ -144,6 +146,7 @@ Pay button with simple configuration
 - `svt-payment-type` (optional): Payment type of widget (`merchant` / `exchange` / `iov` ) - `string` - default `null`
 - `svt-hide-confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
 - `svt-iov-domain` (optional): Set default Starname domain - `string` - default `null`
+- `svt-ref-code` (optional): Referral ID for comissions - `string` - default `null`
 
 
 ##### Example 

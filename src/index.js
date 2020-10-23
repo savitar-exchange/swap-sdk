@@ -145,6 +145,7 @@ export class Widget {
 		if (this.config?.broker_address) src = `${src}&broker_address=${this.config.broker_address}`
         if (this.config?.hide_confirm) src = `${src}&hide_confirm=${this.config.hide_confirm}`
         if (this.config?.iov_domain) src = `${src}&iov_domain=${this.config.iov_domain}`
+        if (this.config?.ref_code) src = `${src}&refCode=${this.config.ref_code}`
 
 		src = `${src}&lang=${this.lang}`
 
@@ -191,6 +192,7 @@ export class Widget {
 		if (this.config?.broker_address) src = `${src}&broker_address=${this.config.broker_address}`
         if (this.config?.hide_confirm) src = `${src}&hide_confirm=${this.config.hide_confirm}`
         if (this.config?.iov_domain) src = `${src}&iov_domain=${this.config.iov_domain}`
+        if (this.config?.ref_code) src = `${src}&refCode=${this.config.ref_code}`
 
 		src = `${src}&lang=${this.lang}`
 
@@ -300,6 +302,7 @@ export class Widget {
             const order_type = element.getAttribute('svt-order-type')
             const broker_address = element.getAttribute('svt-broker-address')
             const iov_domain = element.getAttribute('svt-iov-domain')
+            const ref_code = element.getAttribute('svt-ref-code')
 
             if (!self.widgetStarted) {
                 if(amount) this.config.amount = amount
@@ -314,6 +317,7 @@ export class Widget {
                 if(broker_address) this.config.broker_address = broker_address
                 if(hide_confirm) this.config.hide_confirm = hide_confirm
                 if(iov_domain) this.config.iov_domain = iov_domain
+                if(ref_code) this.config.ref_code = ref_code
 
                 self.openPopup()
             }
