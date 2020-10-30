@@ -68,10 +68,12 @@ export class Widget {
                 this.onExit = callback
             break
             case 'failure':
+                if(this.config?.hide_confirm && this.widgetType === 'modal') this.closeModal()
                 this.onFailure = callback
             break
 
             case 'success':
+                if(this.config?.hide_confirm && this.widgetType === 'modal') this.closeModal()
                 this.onSuccess = callback
             break
 
@@ -125,6 +127,11 @@ export class Widget {
 
         this.widgetStarted = true
 		document.body.appendChild(this.iframe)
+    }
+    closeModal(){
+        this.resetFrame()
+        this.closeModalEvents()
+        this.closeEvents()
     }
     openPopup(){
         const popupWidth = 400
@@ -340,12 +347,7 @@ export class Widget {
                 if (typeof self.onFailure === 'function') self.onFailure(e.data.data)
             break
             case 'close':
-                if (self.widgetType === 'modal') {
-
-                    self.resetFrame()
-                    self.closeModalEvents()
-                    self.closeEvents()
-                }
+                if (self.widgetType === 'modal')  self.closeModal()
                 if (typeof self.onExit === 'function') self.onExit()
             break
 
