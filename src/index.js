@@ -339,11 +339,11 @@ export class Widget {
                 }
             break
             case 'success':
+                if(this.config?.hide_confirm && this.widgetType === 'modal') this.closeModal()
                 if (typeof self.onSuccess === 'function') self.onSuccess(e.data.data)
             break
             case 'failure':
                 if(this.config?.hide_confirm && this.widgetType === 'modal') this.closeModal()
-
                 if (typeof self.onFailure === 'function') self.onFailure(e.data.data)
             break
             case 'close':
