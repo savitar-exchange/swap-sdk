@@ -105,7 +105,6 @@ export class Widget {
 
         const rand =  Math.round(Math.random()*100)
         buttons.forEach((e) => {
-            console.log('btn', e)
             e.setAttribute('svt-rand', rand)
 
             document.addEventListener('click', event => this.modalEvents(this, event, rand))
@@ -124,7 +123,6 @@ export class Widget {
                 if (element.attributes.id.value === self.buttonId 
                     && !self.widgetStarted) {
                         self.checkIframeCookie((status) => {
-                            console.log('cookie state', status)
                             return status ? self.openModal() : self.openPopup()
                         })
                 }
@@ -190,10 +188,7 @@ export class Widget {
         `
 
         let popup = window.open(src, 'Savitar Swap', opts)
-        // window.addEventListener("beforeunload", function(event) { 
-        //     event.preventDefault()
-        //     console.log('close window')
-        // })
+
         if (window.focus) popup.focus()
     }
     initIframe() {
@@ -225,7 +220,7 @@ export class Widget {
         
 		return this.iframe
     }  
-    _noCookiesDisclaimer(id, container) {
+    _noCookiesDisclaimer(container) {
         const rand = Math.round(Math.random()*100)
         document.addEventListener('click', e => this.noCookiesEvents(this, e, rand))
 
@@ -256,7 +251,7 @@ export class Widget {
             
         if (embedContainer === null) throw new SwapWidgetError('#'+id+' container not found')
         this.checkIframeCookie(status => {
-            if(!status) return this._noCookiesDisclaimer(id, embedContainer)
+            if(!status) return this._noCookiesDisclaimer(embedContainer)
             this.iframe = this.initIframe()
 
             this.widgetStarted = true
