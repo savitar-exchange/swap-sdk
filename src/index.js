@@ -97,24 +97,39 @@ export class Widget {
         document.head.appendChild(styleSheet)
     }
 //Modal
-	initModal() {
-		document.addEventListener('click', e => this.modalEvents(this, e))
-    }
     closeModalEvents() {
         document.removeEventListener('click', e => this.modalEvents(this, e))
     }
-    modalEvents(self, event) {
+    initModal(){
+        const buttons = document.querySelectorAll(`#${this.buttonId}`)
+
+        const rand =  Math.round(Math.random()*100)
+        buttons.forEach((e) => {
+            console.log('btn', e)
+            e.setAttribute('svt-rand', rand)
+
+            document.addEventListener('click', event => this.modalEvents(this, event, rand))
+
+        })
+        // this.initModal(rand)
+
+    }
+    modalEvents(self, event, rand) {
         let element = event.target
 
         if ( (element.tagName === 'BUTTON' || element.tagName === 'SPAN')
-        && element.attributes.id ) {
+        && element.attributes.id) {
 
-            if (element.attributes.id.value === self.buttonId 
-                && !self.widgetStarted) {
-                    self.checkIframeCookie((status) => {
-                        return status ? self.openModal() : self.openPopup()
-                    })
+            if(rand && parseInt(element.attributes['svt-rand'].value) === rand) {
+                if (element.attributes.id.value === self.buttonId 
+                    && !self.widgetStarted) {
+                        self.checkIframeCookie((status) => {
+                            console.log('cookie state', status)
+                            return status ? self.openModal() : self.openPopup()
+                        })
+                }
             }
+
         }
     }
     openModal() {
