@@ -1,6 +1,6 @@
 {
   "name": "@savitar.exchange/swap-sdk",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Savitar Swap SDK",
   "homepage": "https://github.com/savitar-exchange/swap-sdk#readme",
   "main": "dist/bundle.js",
