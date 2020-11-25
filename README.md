@@ -105,6 +105,9 @@ new Swap.Widget({
 - `delivery_address` (optional): Address to send ordered coins - `string` - default `null`
 - `hide_confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
 - `ref_code` (optional): Referral ID for comissions - `string` - default `null`
+- `font_family` (optional): Google Font name - `string` - default `null`
+- `primary_color` (optional): Primary color (text or hex) - `string` - default `null`
+- `secondary_color` (optional): Secondary color (text or hex) - `string` - default `null`
 
 ### IOV
 
@@ -118,6 +121,9 @@ new Swap.Widget({
 - `hide_confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
 - `iov_domain` (optional): Set default Starname domain - `string` - default `null`
 - `ref_code` (optional): Referral ID for comissions - `string` - default `null`
+- `font_family` (optional): Google Font name - `string` - default `null`
+- `primary_color` (optional): Primary color (text or hex) - `string` - default `null`
+- `secondary_color` (optional): Secondary color (text or hex) - `string` - default `null`
 
 #### Buy IOVs
 
@@ -130,6 +136,9 @@ new Swap.Widget({
 - `delivery_address` (optional): Address to send ordered coins - `string` - default `null`
 - `hide_confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
 - `ref_code` (optional): Referral ID for comissions - `string` - default `null`
+- `font_family` (optional): Google Font name - `string` - default `null`
+- `primary_color` (optional): Primary color (text or hex) - `string` - default `null`
+- `secondary_color` (optional): Secondary color (text or hex) - `string` - default `null`
 
 ## Buttons
 
@@ -148,6 +157,9 @@ Pay button with simple configuration
 - `svt-hide-confirm` (optional): Hide payment confirmation (data @events) ( `true` | `false` ) - `bool` - default `false`
 - `svt-iov-domain` (optional): Set default Starname domain - `string` - default `null`
 - `svt-ref-code` (optional): Referral ID for comissions - `string` - default `null`
+- `svt-font-family` (optional): Google Font name - `string` - default `null`
+- `svt-primary-color` (optional): Primary color (text or hex) - `string` - default `null`
+- `svt-secondary-color` (optional): Secondary color (text or hex) - `string` - default `null`
 
 
 ##### Example 

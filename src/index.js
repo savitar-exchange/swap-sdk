@@ -164,7 +164,10 @@ export class Widget {
         if (this.config?.hide_confirm) src = `${src}&hide_confirm=${this.config.hide_confirm}`
         if (this.config?.iov_domain) src = `${src}&iov_domain=${this.config.iov_domain}`
         if (this.config?.ref_code) src = `${src}&refCode=${this.config.ref_code}`
-
+        if (this.config?.font_family) src = `${src}&fontFamily=${this.config.fontFamily}`
+        if (this.config?.primary_color) src = `${src}&primaryColor=${this.config.primaryColor}`
+        if (this.config?.secondary_color) src = `${src}&secondaryColor=${this.config.secondaryColor}`
+        
 		src = `${src}&lang=${this.lang}`
 
 
@@ -208,7 +211,10 @@ export class Widget {
         if (this.config?.hide_confirm) src = `${src}&hide_confirm=${this.config.hide_confirm}`
         if (this.config?.iov_domain) src = `${src}&iov_domain=${this.config.iov_domain}`
         if (this.config?.ref_code) src = `${src}&refCode=${this.config.ref_code}`
-
+        if (this.config?.font_family) src = `${src}&fontFamily=${this.config.fontFamily}`
+        if (this.config?.primary_color) src = `${src}&primaryColor=${this.config.primaryColor}`
+        if (this.config?.secondary_color) src = `${src}&secondaryColor=${this.config.secondaryColor}`
+        
 		src = `${src}&lang=${this.lang}`
 
 		this.iframe.setAttribute('src', src)
@@ -314,10 +320,14 @@ export class Widget {
             const currency = element.getAttribute('svt-currency')
             const delivery_address = element.getAttribute('svt-delivery-address')
             const payment_type = element.getAttribute('svt-payment-type')
+            const hide_confirm = element.getAttribute('svt-hide-confirm')
             const order_type = element.getAttribute('svt-order-type')
             const broker_address = element.getAttribute('svt-broker-address')
             const iov_domain = element.getAttribute('svt-iov-domain')
             const ref_code = element.getAttribute('svt-ref-code')
+            const font_family = element.getAttribute('svt-font-family')
+            const primary_color = element.getAttribute('svt-primary-color')
+            const secondary_color = element.getAttribute('svt-secondary-color')
 
             if (!self.widgetStarted) {
                 if(amount) this.config.amount = amount
@@ -333,6 +343,10 @@ export class Widget {
                 if(hide_confirm) this.config.hide_confirm = hide_confirm
                 if(iov_domain) this.config.iov_domain = iov_domain
                 if(ref_code) this.config.ref_code = ref_code
+
+                if(font_family) this.config.fontFamily = font_family
+                if(primary_color) this.config.primaryColor = primary_color
+                if(secondary_color) this.config.secondaryColor = secondary_color
 
                 self.openPopup()
             }
