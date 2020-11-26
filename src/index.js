@@ -164,9 +164,9 @@ export class Widget {
         if (this.config?.hide_confirm) src = `${src}&hide_confirm=${this.config.hide_confirm}`
         if (this.config?.iov_domain) src = `${src}&iov_domain=${this.config.iov_domain}`
         if (this.config?.ref_code) src = `${src}&refCode=${this.config.ref_code}`
-        if (this.config?.font_family) src = `${src}&fontFamily=${this.config.fontFamily}`
-        if (this.config?.primary_color) src = `${src}&primaryColor=${this.config.primaryColor}`
-        if (this.config?.secondary_color) src = `${src}&secondaryColor=${this.config.secondaryColor}`
+        if (this.config?.font_family) src = `${src}&fontFamily=${this.config.font_family}`
+        if (this.config?.primary_color) src = `${src}&primaryColor=${this.config.primary_color}`
+        if (this.config?.secondary_color) src = `${src}&secondaryColor=${this.config.secondary_color}`
         
 		src = `${src}&lang=${this.lang}`
 
@@ -211,9 +211,9 @@ export class Widget {
         if (this.config?.hide_confirm) src = `${src}&hide_confirm=${this.config.hide_confirm}`
         if (this.config?.iov_domain) src = `${src}&iov_domain=${this.config.iov_domain}`
         if (this.config?.ref_code) src = `${src}&refCode=${this.config.ref_code}`
-        if (this.config?.font_family) src = `${src}&fontFamily=${this.config.fontFamily}`
-        if (this.config?.primary_color) src = `${src}&primaryColor=${this.config.primaryColor}`
-        if (this.config?.secondary_color) src = `${src}&secondaryColor=${this.config.secondaryColor}`
+        if (this.config?.font_family) src = `${src}&fontFamily=${this.config.font_family}`
+        if (this.config?.primary_color) src = `${src}&primaryColor=${this.config.primary_color}`
+        if (this.config?.secondary_color) src = `${src}&secondaryColor=${this.config.secondary_color}`
         
 		src = `${src}&lang=${this.lang}`
 
@@ -344,9 +344,9 @@ export class Widget {
                 if(iov_domain) this.config.iov_domain = iov_domain
                 if(ref_code) this.config.ref_code = ref_code
 
-                if(font_family) this.config.fontFamily = font_family
-                if(primary_color) this.config.primaryColor = primary_color
-                if(secondary_color) this.config.secondaryColor = secondary_color
+                if(font_family) this.config.font_family = font_family
+                if(primary_color) this.config.primary_color = primary_color
+                if(secondary_color) this.config.secondary_color = secondary_color
 
                 self.openPopup()
             }

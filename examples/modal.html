@@ -17,7 +17,7 @@
             </div>
             <div class="col-12 offset-md-3 col-md-6 text-center card my-2 py-2">
                 <h5>Modal (click on button to start)</h5>
-                <button class="swap-open">
+                <button class="swap-open" id="swap-init">
                     Pay with Swap
                 </button>
             </div>
@@ -37,7 +37,7 @@
                 currency: 'btc',
                 amount: 200,
                 amount_editable: true,
-                delivery_address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX'
+                delivery_address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX',
             }
         })
         .init()
