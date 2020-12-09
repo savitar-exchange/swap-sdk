@@ -42,6 +42,8 @@ or
 ```
 ## Quick Start
 
+In embedded mode, we strongly recommend to show the widget in a minimum 390px (min-width) x 400px (min-height) element to ensure best compatibility with banks 3DSecure pages."
+
 ### Initialize the client
 
 ```js
